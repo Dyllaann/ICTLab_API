@@ -1,5 +1,5 @@
 # TimeTableAPI
-<img src="https://dyllaann.visualstudio.com/_apis/public/build/definitions/79a96c92-83c8-47f5-ae01-483a46c33849/2/badge"/>
+<img src="https://dyllaann.visualstudio.com/_apis/public/build/definitions/79a96c92-83c8-47f5-ae01-483a46c33849/2/badge"/> Latest Build
 
 An API for the TimeTable2 system created as project on the University of Applied Sciences of Rotterdam.\
 The project is about creating a room booking/management system to extend the existing functionalities of the schedules to allow for classrooms to be booked by teachers/students using a mobile app.\
