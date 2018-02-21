@@ -2,7 +2,9 @@
 
 # ICTLab API
 
-API for 
+An API for the TimeTable2 system created as project on the University of Applied Sciences of Rotterdam.
+The project is about creating a room booking/management system to extend the existing functionalities of the schedules to allow for classrooms to be booked by teachers/students using a mobile app.
+The system must also be capable of handling (support) messages for the support/maintenance desk of the building.
 
 ## Getting Started
 
@@ -16,7 +18,7 @@ To be able to make use of the API yourself, the following prerequisites are need
 * Valid Azure Subscription
 ```
 
-[//]: <> ### Installing
+### Installing
 
 A step by step series of examples that tell you have to get a development env running
 
