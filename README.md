@@ -22,11 +22,13 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-To be able to make use of the API yourself, the following prerequisites are needed for the API
-
+The following prerequisites are needed for the API
 ```
 * Valid Azure Subscription
 ```
+
+To make use of the API, the following Repository can be used:
+[ICTLab-Application](https://github.com/KajdeMunter/Ictlab-Application)
 
 ### Installing
 
