@@ -1,10 +1,20 @@
-//Todo
+# TimeTableAPI
 
-# ICTLab API
-
-An API for the TimeTable2 system created as project on the University of Applied Sciences of Rotterdam.
-The project is about creating a room booking/management system to extend the existing functionalities of the schedules to allow for classrooms to be booked by teachers/students using a mobile app.
+An API for the TimeTable2 system created as project on the University of Applied Sciences of Rotterdam.\
+The project is about creating a room booking/management system to extend the existing functionalities of the schedules to allow for classrooms to be booked by teachers/students using a mobile app.\
 The system must also be capable of handling (support) messages for the support/maintenance desk of the building.
+
+## Table of content
+
+- [Getting Started](#getting-started)
+    - [Prerequisites](#prerequisites)
+    - [Installing](#installing)
+- [Deployment](#deployment)
+- [Built With](#built-with)
+- [Contributing](#contributing)
+- [Authors](#authors)
+
+
 
 ## Getting Started
 
@@ -22,7 +32,7 @@ To be able to make use of the API yourself, the following prerequisites are need
 
 A step by step series of examples that tell you have to get a development env running
 
-Say what the step will be
+Clone the repository
 
 ```
 Give the example
@@ -35,26 +45,6 @@ until finished
 ```
 
 End with an example of getting some data out of the system or using it for a little demo
-
-## Running the tests
-
-Explain how to run the automated tests for this system
-
-### Break down into end to end tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
-
-```
-Give an example
-```
 
 ## Deployment
 
