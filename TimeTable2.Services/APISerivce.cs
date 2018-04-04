@@ -14,9 +14,9 @@ namespace TimeTable2.Services
 
     public static class APISerivce
     {
-        private static readonly string ClientIdIos = WebConfigurationManager.AppSettings["GoogleClentId.ios"];
-        private static readonly string ClientIdAndroid = WebConfigurationManager.AppSettings["GoogleClentId.android"];
-        private static readonly string ClientIdWeb = WebConfigurationManager.AppSettings["GoogleClentId.web"];
+        private static readonly string ClientIdIos = WebConfigurationManager.AppSettings["GoogleClientId.ios"];
+        private static readonly string ClientIdAndroid = WebConfigurationManager.AppSettings["GoogleClientId.android"];
+        private static readonly string ClientIdWeb = WebConfigurationManager.AppSettings["GoogleClientId.web"];
 
         private const string Endpoint = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token={0}";
 
