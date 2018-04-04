@@ -3,50 +3,74 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Http;
+using System.Web.Http.Controllers;
 using Newtonsoft.Json;
 using Swashbuckle.Swagger.Annotations;
 using TimeTable2.Engine;
 using TimeTable2.Models;
+using TimeTable2.Services;
 
 namespace TimeTable2.Controllers
 {
     [RoutePrefix("api/main")]
     public class TimeTableApiController: ApiController
     {
-        const string Endpoint = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token={0}";
-        private readonly string ClientId = WebConfigurationManager.AppSettings["Google.ClientId"];
 
+        public override async Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
+        {
+            try
+            {
+                var header = controllerContext.Request.Headers.Authorization;
+                if (header == null)
+                {
+                    return controllerContext.Request.CreateResponse(HttpStatusCode.Unauthorized, "UnAuthorized");
+                }
+               
+                //Debug section
+                var debugSetting = WebConfigurationManager.AppSettings["debug"];
+                var debug = bool.Parse(debugSetting);
+                if (debug)
+                {
+                    if (header.Parameter == "tt2")
+                    {
+                        return await base.ExecuteAsync(controllerContext, cancellationToken);
+                    }
+                    return controllerContext.Request.CreateResponse(HttpStatusCode.Unauthorized, "UnAuthorized");
+                }
+
+                //Actual Authentication section
+                var authenticated = await APISerivce.Authorize(header.Parameter);
+                if (authenticated == null)
+                {
+                    return controllerContext.Request.CreateResponse(HttpStatusCode.Unauthorized, "UnAuthorized");
+                }
+
+                return await base.ExecuteAsync(controllerContext, cancellationToken);
+            }
+            catch (Exception e)
+            {
+                //var message = string.Format("error occured in {0} : {1}", controllerContext.Request.RequestUri, e.Message);
+                return controllerContext.Request.CreateResponse(HttpStatusCode.InternalServerError, "InternalServerError");
+            }
+        }
+
+        #region Test Methods 
         [HttpPost]
         [SwaggerOperation("testAuthentication")]
         [Route("testAuthentication")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(UserProfile))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(GoogleUserProfile))]
         [SwaggerResponse(HttpStatusCode.NotFound, Description = "Classroom schedule was not found")]
-        public async Task<UserProfile> Authenticate(string token)
+        public async Task<HttpResponseMessage> Authorize(string token)
         {
-            var url = string.Format(Endpoint, token);
-            var client = new HttpClient();
-            var response = client.GetAsync(url);
-            var data = await response.Result.Content.ReadAsStringAsync();
-
-            TokenResponse tokenResponse;
-            try
-            {
-                tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(data);
-            }
-            catch (JsonSerializationException)
-            {
-                return null;
-            }
-
-            if (tokenResponse.Aud == null) return null;
-            tokenResponse.User.UserId = tokenResponse.Sub;
-            return tokenResponse.Aud.Contains(ClientId)
-                ? tokenResponse.User
-                : null;
+            var isAuthorized = await APISerivce.Authorize(token);
+            return (isAuthorized != null)
+                ? Request.CreateResponse(HttpStatusCode.OK, isAuthorized)
+                : Request.CreateResponse(HttpStatusCode.Unauthorized, "UnAuthorized");
         }
 
         [HttpGet]
@@ -66,23 +90,6 @@ namespace TimeTable2.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, classroom);
         }
-    }
-
-    public class TokenResponse
-    {
-        [JsonProperty("iss")]
-        public string Iss { get; set; }
-        [JsonProperty("sub")]
-        public int Sub { get; set; }
-        [JsonProperty("azp")]
-        public string Azp { get; set; }
-        [JsonProperty("aud")]
-        public string Aud { get; set; }
-        [JsonProperty("iat")]
-        public int Iat { get; set; }
-        [JsonProperty("exp")]
-        public int Exp { get; set; }
-
-        public UserProfile User { get; set; }
+        #endregion
     }
 }

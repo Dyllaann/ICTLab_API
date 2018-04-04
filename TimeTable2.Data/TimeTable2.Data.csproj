@@ -4,11 +4,11 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{C1C742FC-FFA5-402A-AB00-D3EAF2A69542}</ProjectGuid>
+    <ProjectGuid>{A883A745-82DC-41DD-B5E9-B836BCD125B1}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TimeTable2.Repository</RootNamespace>
-    <AssemblyName>TimeTable2.Repository</AssemblyName>
+    <RootNamespace>TimeTable2.Data</RootNamespace>
+    <AssemblyName>TimeTable2.Data</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -47,21 +47,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Interfaces\IUserRepository.cs" />
-    <Compile Include="IRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimeTableContext.cs" />
-    <Compile Include="UserRepository.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\TimeTable2.Engine\TimeTable2.Engine.csproj">
-      <Project>{c65e7157-d103-4bff-ad71-b7f54563ae0e}</Project>
-      <Name>TimeTable2.Engine</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\TimeTable2.Engine\TimeTable2.Engine.csproj">
+      <Project>{C65E7157-D103-4BFF-AD71-B7F54563AE0E}</Project>
+      <Name>TimeTable2.Engine</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

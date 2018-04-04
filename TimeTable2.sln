@@ -13,6 +13,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTable2.Tests", "TimeTab
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTable2.Repository", "TimeTable2.Repository\TimeTable2.Repository.csproj", "{C1C742FC-FFA5-402A-AB00-D3EAF2A69542}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTable2.Data", "TimeTable2.Data\TimeTable2.Data.csproj", "{A883A745-82DC-41DD-B5E9-B836BCD125B1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{C1C742FC-FFA5-402A-AB00-D3EAF2A69542}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1C742FC-FFA5-402A-AB00-D3EAF2A69542}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1C742FC-FFA5-402A-AB00-D3EAF2A69542}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A883A745-82DC-41DD-B5E9-B836BCD125B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A883A745-82DC-41DD-B5E9-B836BCD125B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A883A745-82DC-41DD-B5E9-B836BCD125B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A883A745-82DC-41DD-B5E9-B836BCD125B1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

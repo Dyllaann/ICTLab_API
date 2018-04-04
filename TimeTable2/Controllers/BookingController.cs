@@ -11,7 +11,7 @@ using TimeTable2.Models;
 namespace TimeTable2.Controllers
 {
     [RoutePrefix("api/Booking")]
-    public class BookingController : ApiController
+    public class BookingController : TimeTableApiController
     {
         [HttpPost]
         [SwaggerOperation("Filter")]
