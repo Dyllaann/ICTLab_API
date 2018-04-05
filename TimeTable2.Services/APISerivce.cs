@@ -8,6 +8,9 @@ using System.Web.Configuration;
 using Newtonsoft.Json;
 using TimeTable2.Engine;
 using Google.Apis.Auth;
+using Google.Apis.Logging;
+using log4net;
+using TimeTable2.Tools;
 
 namespace TimeTable2.Services
 {
@@ -20,8 +23,15 @@ namespace TimeTable2.Services
 
         private const string Endpoint = "https://www.googleapis.com/oauth2/v3/tokeninfo?id_token={0}";
 
-        public static async Task<GoogleUserProfile> Authorize(string token)
+        public static async Task<GoogleUserProfile> Authorize(string token, ILog logger)
         {
+            var debugSetting = WebConfigurationManager.AppSettings["debug"];
+            var debug = bool.Parse(debugSetting);
+            if (debug)
+            {
+                logger.Info($"Token: {token}");
+            }
+
             var client = new HttpClient();
             var url = string.Format(Endpoint, token);
             var response = client.GetAsync(url);
@@ -38,18 +48,25 @@ namespace TimeTable2.Services
             }
 
             //EXP(iry) should not be passed
-            var unixNow = (Int32)(DateTime.UtcNow.Subtract(new DateTime(1970, 1, 1))).TotalSeconds;
-            if (tokenResponse.Exp > unixNow) return null;
+            var unixNow = TimeConversion.GetUnixNow();
+            if (tokenResponse.Exp < unixNow)
+            {
+                logger.Info($"Token expired.");
+                return null;
+            }
+            
 
             //AUD(ience) has to be valid ClientId of our application
             if (tokenResponse.Aud == null) return null;
             if (tokenResponse.Aud.Contains(ClientIdIos) || tokenResponse.Aud.Contains(ClientIdAndroid) || tokenResponse.Aud.Contains(ClientIdWeb))
             {
                 //If everything is validated, create the userobject
+                logger.Info($"Logged in!");
                 return new GoogleUserProfile(tokenResponse);
             }
 
             //If validation fails, return null
+            logger.Info($"Invalid audience.");
             return null;
 
         }

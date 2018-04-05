@@ -9,6 +9,7 @@ using System.Web;
 using System.Web.Configuration;
 using System.Web.Http;
 using System.Web.Http.Controllers;
+using log4net;
 using Newtonsoft.Json;
 using Swashbuckle.Swagger.Annotations;
 using TimeTable2.Engine;
@@ -17,17 +18,18 @@ using TimeTable2.Services;
 
 namespace TimeTable2.Controllers
 {
-    [RoutePrefix("api/main")]
-    public class TimeTableApiController: ApiController
+    public class TimeTableApiController : ApiController
     {
-
         public override async Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
         {
+            var logger = LogManager.GetLogger("TimeTableApiController");
             try
             {
+
                 var header = controllerContext.Request.Headers.Authorization;
                 if (header == null)
                 {
+                    logger.Info($"Empty Authorization header.");
                     return controllerContext.Request.CreateResponse(HttpStatusCode.Unauthorized, "UnAuthorized");
                 }
                
@@ -38,13 +40,13 @@ namespace TimeTable2.Controllers
                 {
                     if (header.Parameter == "tt2")
                     {
+                        logger.Info($"Logged in with Debug Authentication.");
                         return await base.ExecuteAsync(controllerContext, cancellationToken);
                     }
-                    return controllerContext.Request.CreateResponse(HttpStatusCode.Unauthorized, "UnAuthorized");
                 }
 
                 //Actual Authentication section
-                var authenticated = await APISerivce.Authorize(header.Parameter);
+                var authenticated = await APISerivce.Authorize(header.Parameter, logger);
                 if (authenticated == null)
                 {
                     return controllerContext.Request.CreateResponse(HttpStatusCode.Unauthorized, "UnAuthorized");
@@ -58,38 +60,5 @@ namespace TimeTable2.Controllers
                 return controllerContext.Request.CreateResponse(HttpStatusCode.InternalServerError, "InternalServerError");
             }
         }
-
-        #region Test Methods 
-        [HttpPost]
-        [SwaggerOperation("testAuthentication")]
-        [Route("testAuthentication")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(GoogleUserProfile))]
-        [SwaggerResponse(HttpStatusCode.NotFound, Description = "Classroom schedule was not found")]
-        public async Task<HttpResponseMessage> Authorize(string token)
-        {
-            var isAuthorized = await APISerivce.Authorize(token);
-            return (isAuthorized != null)
-                ? Request.CreateResponse(HttpStatusCode.OK, isAuthorized)
-                : Request.CreateResponse(HttpStatusCode.Unauthorized, "UnAuthorized");
-        }
-
-        [HttpGet]
-        [SwaggerOperation("testRoom")]
-        [Route("testRoom")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(Classroom))]
-        [SwaggerResponse(HttpStatusCode.NotFound, Description = "Classroom schedule was not found")]
-        public HttpResponseMessage TestRoom()
-        {
-            var classroom = new Classroom
-            {
-                Capacity = 30,
-                Id = Guid.NewGuid(),
-                Maintenance = MaintenanceStatus.OK,
-                RoomId = "H4.318"
-            };
-
-            return Request.CreateResponse(HttpStatusCode.OK, classroom);
-        }
-        #endregion
     }
 }
