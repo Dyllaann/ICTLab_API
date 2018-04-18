@@ -13,6 +13,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTable2.Tests", "TimeTab
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTable2.Repository", "TimeTable2.Repository\TimeTable2.Repository.csproj", "{C1C742FC-FFA5-402A-AB00-D3EAF2A69542}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTable2.Data", "TimeTable2.Data\TimeTable2.Data.csproj", "{A883A745-82DC-41DD-B5E9-B836BCD125B1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTable2.Tools", "TimeTable2.Tools\TimeTable2.Tools.csproj", "{AE43CAB7-77EF-4D46-9EBE-37D2C4D2CAA7}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TimeTable2.Scraper", "TimeTable2.Scraper\TimeTable2.Scraper.csproj", "{31F3E256-1CBD-487B-9081-88B99E061D2B}"
 EndProject
 Global
@@ -41,6 +45,14 @@ Global
 		{C1C742FC-FFA5-402A-AB00-D3EAF2A69542}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C1C742FC-FFA5-402A-AB00-D3EAF2A69542}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C1C742FC-FFA5-402A-AB00-D3EAF2A69542}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A883A745-82DC-41DD-B5E9-B836BCD125B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A883A745-82DC-41DD-B5E9-B836BCD125B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A883A745-82DC-41DD-B5E9-B836BCD125B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A883A745-82DC-41DD-B5E9-B836BCD125B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE43CAB7-77EF-4D46-9EBE-37D2C4D2CAA7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE43CAB7-77EF-4D46-9EBE-37D2C4D2CAA7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE43CAB7-77EF-4D46-9EBE-37D2C4D2CAA7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE43CAB7-77EF-4D46-9EBE-37D2C4D2CAA7}.Release|Any CPU.Build.0 = Release|Any CPU
 		{31F3E256-1CBD-487B-9081-88B99E061D2B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{31F3E256-1CBD-487B-9081-88B99E061D2B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{31F3E256-1CBD-487B-9081-88B99E061D2B}.Release|Any CPU.ActiveCfg = Release|Any CPU

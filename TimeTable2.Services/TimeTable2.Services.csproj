@@ -48,6 +48,9 @@
     <Reference Include="Google.Apis.PlatformServices, Version=1.32.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.1.32.2\lib\net45\Google.Apis.PlatformServices.dll</HintPath>
     </Reference>
+    <Reference Include="log4net, Version=2.0.8.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <HintPath>..\packages\log4net.2.0.8\lib\net45-full\log4net.dll</HintPath>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
@@ -68,6 +71,7 @@
     <Reference Include="System.Security.Cryptography.X509Certificates, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Security.Cryptography.X509Certificates.4.3.0\lib\net461\System.Security.Cryptography.X509Certificates.dll</HintPath>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -75,6 +79,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="APISerivce.cs" />
     <Compile Include="CalendarExample.cs" />
     <Compile Include="Models\OwClassroom.cs" />
     <Compile Include="TimeTableService.cs" />
@@ -88,6 +93,10 @@
     <ProjectReference Include="..\TimeTable2.Repository\TimeTable2.Repository.csproj">
       <Project>{c1c742fc-ffa5-402a-ab00-d3eaf2a69542}</Project>
       <Name>TimeTable2.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TimeTable2.Tools\TimeTable2.Tools.csproj">
+      <Project>{AE43CAB7-77EF-4D46-9EBE-37D2C4D2CAA7}</Project>
+      <Name>TimeTable2.Tools</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

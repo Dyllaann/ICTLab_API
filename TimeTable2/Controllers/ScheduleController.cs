@@ -13,7 +13,7 @@ namespace TimeTable2.Controllers
 {
 
     [RoutePrefix("api/Schedule")]
-    public class ScheduleController : ApiController
+    public class ScheduleController : TimeTableApiController
     {
         #region Room
         [HttpGet]
