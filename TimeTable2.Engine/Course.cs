@@ -9,6 +9,7 @@ namespace TimeTable2.Engine
     public class Course
     {
         public Guid Id { get; set; }
+        public int WeekDay { get; set; }
         public int startBlok { get; set; }
         public int EndBlok { get; set; }
         public Classroom Room { get; set; }

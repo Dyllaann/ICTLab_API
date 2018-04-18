@@ -75,17 +75,15 @@ namespace TimeTable2.Controllers
         [HttpGet]
         [SwaggerOperation("scrape")]
         [Route("scrape")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<string>))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<Course>))]
         [SwaggerResponse(HttpStatusCode.NotFound, Description = "Scraping unable")]
         public HttpResponseMessage Scrape()
         {
             var scraper = new WebScraper();
 
             var listofrooms = new List<string>();
-            listofrooms.Add("EXT");
             listofrooms.Add("H.1.110");
-            listofrooms.Add("H.1.112");
-            var html = scraper.Execute(listofrooms);
+            var html = scraper.Execute(listofrooms, 4, 17);
             return Request.CreateResponse(HttpStatusCode.OK, html);
         }
     }
