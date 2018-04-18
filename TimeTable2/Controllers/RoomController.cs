@@ -13,7 +13,7 @@ using TimeTable2.Services.Models;
 namespace TimeTable2.Controllers
 {
     [RoutePrefix("api/Room")]
-    public class RoomController : ApiController
+    public class RoomController : TimeTableApiController
     {
         [HttpGet]
         [SwaggerOperation("CurrentAvailable/{id}")]
