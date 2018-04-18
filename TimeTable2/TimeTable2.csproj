@@ -194,6 +194,10 @@
       <Project>{C65E7157-D103-4BFF-AD71-B7F54563AE0E}</Project>
       <Name>TimeTable2.Engine</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TimeTable2.Scraper\TimeTable2.Scraper.csproj">
+      <Project>{31F3E256-1CBD-487B-9081-88B99E061D2B}</Project>
+      <Name>TimeTable2.Scraper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\TimeTable2.Services\TimeTable2.Services.csproj">
       <Project>{b1580f58-d3cf-42c2-ba46-60684417037e}</Project>
       <Name>TimeTable2.Services</Name>
