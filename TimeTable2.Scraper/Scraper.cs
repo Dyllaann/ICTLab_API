@@ -52,7 +52,6 @@ namespace TimeTable2.Scraper
         {
             var html = doc.ParsedText;
             var newHtml = html.Replace("\r\n", string.Empty).Replace("\"", "\"");
-            LogManager.GetLogger
 
             var document = new HtmlDocument();
             document.LoadHtml(newHtml);

@@ -33,7 +33,7 @@ namespace TimeTable2.Controllers
                     logger.Info($"Empty Authorization header.");
                     return controllerContext.Request.CreateResponse(HttpStatusCode.Unauthorized, "UnAuthorized");
                 }
-               
+
                 //Debug section
                 var debugSetting = WebConfigurationManager.AppSettings["debug"];
                 var debug = bool.Parse(debugSetting);
@@ -45,55 +45,6 @@ namespace TimeTable2.Controllers
                         return await base.ExecuteAsync(controllerContext, cancellationToken);
                     }
                 }
-                tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(data);
-            }
-            catch (JsonSerializationException)
-            {
-                return null;
-            }
-
-            if (tokenResponse.Aud == null) return null;
-            tokenResponse.User.UserId = tokenResponse.Sub;
-            return tokenResponse.Aud.Contains(ClientId)
-                ? tokenResponse.User
-                : null;
-        }
-
-        [HttpGet]
-        [SwaggerOperation("testRoom")]
-        [Route("testRoom")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(Classroom))]
-        [SwaggerResponse(HttpStatusCode.NotFound, Description = "Classroom schedule was not found")]
-        public HttpResponseMessage TestRoom()
-        {
-            var classroom = new Classroom
-            {
-                Capacity = 30,
-                Id = Guid.NewGuid(),
-                Maintenance = MaintenanceStatus.OK,
-                RoomId = "H4.318"
-            };
-
-            return Request.CreateResponse(HttpStatusCode.OK, classroom);
-        }
-
-        [HttpGet]
-        [SwaggerOperation("scrape")]
-        [Route("scrape")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<string>))]
-        [SwaggerResponse(HttpStatusCode.NotFound, Description = "Scraping unable")]
-        public HttpResponseMessage Scrape()
-        {
-            var scraper = new WebScraper();
-
-            var listofrooms = new List<string>();
-            listofrooms.Add("EXT");
-            listofrooms.Add("H.1.110");
-            listofrooms.Add("H.1.112");
-            var html = scraper.Execute(listofrooms);
-            return Request.CreateResponse(HttpStatusCode.OK, html);
-        }
-    }
 
                 //Actual Authentication section
                 var authenticated = await APISerivce.Authorize(header.Parameter, logger);

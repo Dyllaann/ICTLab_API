@@ -10,6 +10,7 @@ using log4net;
 using log4net.Repository.Hierarchy;
 using Swashbuckle.Swagger.Annotations;
 using TimeTable2.Engine;
+using TimeTable2.Scraper;
 using TimeTable2.Services;
 
 namespace TimeTable2.Controllers
@@ -69,6 +70,23 @@ namespace TimeTable2.Controllers
             };
 
             return Request.CreateResponse(HttpStatusCode.OK, classroom);
+        }
+
+        [HttpGet]
+        [SwaggerOperation("scrape")]
+        [Route("scrape")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<string>))]
+        [SwaggerResponse(HttpStatusCode.NotFound, Description = "Scraping unable")]
+        public HttpResponseMessage Scrape()
+        {
+            var scraper = new WebScraper();
+
+            var listofrooms = new List<string>();
+            listofrooms.Add("EXT");
+            listofrooms.Add("H.1.110");
+            listofrooms.Add("H.1.112");
+            var html = scraper.Execute(listofrooms);
+            return Request.CreateResponse(HttpStatusCode.OK, html);
         }
     }
 }
