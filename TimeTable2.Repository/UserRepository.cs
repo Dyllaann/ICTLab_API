@@ -9,19 +9,15 @@ using TimeTable2.Repository.Interfaces;
 
 namespace TimeTable2.Repository
 {
-    public class UserRepository : IUserRepository
+    public class UserRepository : DbRepository, IUserRepository
     {
-        private readonly DbContext context;
+        public UserRepository(DbContext context) : base(context){}
 
-        public UserRepository(DbContext context)
-        {
-            this.context = context;
-        }
 
         public void CreateUser(User user)
         {
-            context.Set<User>().Add(user);
-            context.SaveChanges();
+            Context.Set<User>().Add(user);
+            Context.SaveChanges();
         }
     }
 }

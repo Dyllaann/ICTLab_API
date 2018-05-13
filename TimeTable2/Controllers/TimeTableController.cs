@@ -5,10 +5,12 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
+using System.Web.Configuration;
 using System.Web.Http;
 using log4net;
 using log4net.Repository.Hierarchy;
 using Swashbuckle.Swagger.Annotations;
+using TimeTable2.Data;
 using TimeTable2.Engine;
 using TimeTable2.Scraper;
 using TimeTable2.Services;
@@ -75,15 +77,15 @@ namespace TimeTable2.Controllers
         [HttpGet]
         [SwaggerOperation("scrape")]
         [Route("scrape")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<Course>))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<Classroom>))]
         [SwaggerResponse(HttpStatusCode.NotFound, Description = "Scraping unable")]
-        public HttpResponseMessage Scrape()
+        public HttpResponseMessage Scrape(int quarter, int week)
         {
-            var scraper = new WebScraper();
+            var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
+            var repository = new ScraperRepository(context);
+            var scraperService = new ScraperService(repository);
+            var html = scraperService.Scrape(quarter, week);
 
-            var listofrooms = new List<string>();
-            listofrooms.Add("H.1.110");
-            var html = scraper.Execute(listofrooms, 4, 17);
             return Request.CreateResponse(HttpStatusCode.OK, html);
         }
     }

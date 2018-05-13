@@ -30,6 +30,12 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.2.0\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
     <Reference Include="Google.Apis, Version=1.32.2.0, Culture=neutral, PublicKeyToken=4b01fa6e34db77ab, processorArchitecture=MSIL">
       <HintPath>..\packages\Google.Apis.1.32.2\lib\net45\Google.Apis.dll</HintPath>
     </Reference>
@@ -55,6 +61,7 @@
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net.Http, Version=4.1.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Net.Http.4.3.1\lib\net46\System.Net.Http.dll</HintPath>
@@ -82,6 +89,8 @@
     <Compile Include="APISerivce.cs" />
     <Compile Include="CalendarExample.cs" />
     <Compile Include="Models\OwClassroom.cs" />
+    <Compile Include="ScraperRepository.cs" />
+    <Compile Include="ScraperService.cs" />
     <Compile Include="TimeTableService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -93,6 +102,10 @@
     <ProjectReference Include="..\TimeTable2.Repository\TimeTable2.Repository.csproj">
       <Project>{c1c742fc-ffa5-402a-ab00-d3eaf2a69542}</Project>
       <Name>TimeTable2.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TimeTable2.Scraper\TimeTable2.Scraper.csproj">
+      <Project>{31F3E256-1CBD-487B-9081-88B99E061D2B}</Project>
+      <Name>TimeTable2.Scraper</Name>
     </ProjectReference>
     <ProjectReference Include="..\TimeTable2.Tools\TimeTable2.Tools.csproj">
       <Project>{AE43CAB7-77EF-4D46-9EBE-37D2C4D2CAA7}</Project>

@@ -18,11 +18,11 @@ namespace TimeTable2.Scraper
         /// </summary>
         /// <param name="filter"></param>
         /// <returns></returns>
-        public List<Course> Execute(List<string> filter, int quarter, int week)
+        public List<Classroom> Execute(List<Classroom> filter, int quarter, int week)
         {
 
             var browser = new HtmlWeb();
-            var lessen = new List<Course>();
+            var klassen = new List<Classroom>();
             var i = 1;
 
             while (true)
@@ -42,9 +42,10 @@ namespace TimeTable2.Scraper
                     var roomNumberNode = nodes.SelectNodes("/html[1]/body[1]/center[1]/font[2]").FirstOrDefault();
                     var number = roomNumberNode?.InnerText;
                     var numberFiltered = number?.Substring(0, number.Length - 1);
+                    var classroom = filter.FirstOrDefault(c => c.RoomId == numberFiltered);
 
                     //If it exists in the filter list
-                    if (filter.Contains(numberFiltered))
+                    if (classroom != null)
                     {
                         //Get all the table ROWS for this room
                         var table = nodes.SelectNodes("/html[1]/body[1]/center[1]/table[1]/tr");
@@ -74,7 +75,7 @@ namespace TimeTable2.Scraper
                                 }
 
                                 //Process all other cells
-                                ProcessTableCell(cell, lessen, weekday, blok);
+                                ProcessTableCell(cell, classroom, klassen, weekday, blok);
                                 weekday++;
                             }
                             blok++;
@@ -84,7 +85,7 @@ namespace TimeTable2.Scraper
                 }
                 else
                 {
-                    return lessen;
+                    return klassen;
                 }
             }
         }
@@ -96,7 +97,7 @@ namespace TimeTable2.Scraper
         /// <param name="lessen">The (already existing) list of lessons</param>
         /// <param name="weekday">The identifier of the weekday (1-5)</param>
         /// <param name="j">The row the cell is in</param>
-        private void ProcessTableCell(HtmlNode lessonColumn, List<Course> lessen, int weekday, int j)
+        private void ProcessTableCell(HtmlNode lessonColumn, Classroom lokaal, List<Classroom> lessen, int weekday, int j, int week)
         {
             //Count the rows of the table inside the cell
             var insideRows = lessonColumn.ChildNodes[0].ChildNodes.Count;
@@ -111,13 +112,50 @@ namespace TimeTable2.Scraper
             {
                 var data = lessonColumn.ChildNodes[0].ChildNodes[0].ChildNodes[0].ChildNodes;
                 var reason = data[0].InnerText;
-                lessen.Add(new Course()
+
+                if (lokaal.Courses == null)
                 {
+                    lokaal.Courses = new List<Course>();
+                }
+
+                var exists = lokaal.Courses.FirstOrDefault(c =>
+                    c.WeekDay == weekday &&
+                    c.Week == week);
+
+                if (exists != null)
+                {
+                    var course = new Course()
+                    {
+                        Id = exists.Id,
+                        WeekDay = weekday,
+                        startBlok = 1,
+                        EndBlok = 15,
+                        VakCode = reason,
+                    });
+
+                    lokaal.Courses.Remove(exists);
+                    lokaal.Courses.Add(course);
+                    
+                }
+
+                lokaal.Courses.Add(new Course()
+                {
+                    Id = Guid.NewGuid(),
                     WeekDay = weekday,
                     startBlok = 1,
                     EndBlok = 15,
                     VakCode = reason,
                 });
+
+                var storedClassroom = lessen.FirstOrDefault(k => k.RoomId == lokaal.RoomId);
+                if (storedClassroom == null)
+                {
+                    lessen.Add(lokaal);
+                }
+                else
+                {
+                    storedClassroom.Courses = lokaal.Courses;
+                }
             }
 
             //If there are three information cells, and the first one has two children, there is a normal lesson this cell.
@@ -130,20 +168,56 @@ namespace TimeTable2.Scraper
                 var docent = data[1].InnerText.Replace(" ", "");
                 var cursus = data[2].InnerText.Replace(" ", "");
 
-                lessen.Add(new Course()
+                if (lokaal.Courses == null)
+                {
+                    lokaal.Courses = new List<Course>();
+                }
+
+                var exists = lokaal.Courses.FirstOrDefault(c =>
+                    c.WeekDay == weekday &&
+                    c.startBlok == startBlok &&
+                    c.EndBlok == eindBlok &&
+                    c.Week == week);
+
+                if (exists != null)
+                {
+                    var course = new Course()
+                    {
+                        Id = exists.Id,
+                        WeekDay = weekday,
+                        startBlok = startBlok,
+                        Docent = docent,
+                        EndBlok = eindBlok,
+                        Klas = klas,
+                        VakCode = cursus,
+                    });
+
+                    lokaal.Courses.Remove(exists);
+                    lokaal.Courses.Add(course);
+
+                }
+
+
+                lokaal.Courses.Add(new Course()
                 {
                     WeekDay = weekday,
                     startBlok = startBlok,
                     Docent = docent,
                     EndBlok = eindBlok,
-                    Room = new Classroom()
-                    {
-                        RoomId = klas,
-                        Id = Guid.NewGuid(),
-                    },
+                    Klas = klas,
                     VakCode = cursus,
                     Id = Guid.NewGuid()
                 });
+
+                var storedClassroom = lessen.FirstOrDefault(k => k.RoomId == lokaal.RoomId);
+                if (storedClassroom == null)
+                {
+                    lessen.Add(lokaal);
+                }
+                else
+                {
+                    storedClassroom.Courses = lokaal.Courses;
+                }
             }
 
             //If we have two information rules, and the first cell contains two rows, the lesson is a lesson not specifically for a class.
@@ -155,19 +229,41 @@ namespace TimeTable2.Scraper
                 var klas = data[0].InnerText.Replace(" ", "").Replace(".", "");
                 var cursus = data[1].InnerText.Replace(" ", "");
 
-                lessen.Add(new Course()
+                if (lokaal.Courses == null)
+                {
+                    lokaal.Courses = new List<Course>();
+                }
+
+                var exists = lokaal.Courses.FirstOrDefault(c =>
+                    c.WeekDay == weekday && 
+                    c.startBlok == startBlok && 
+                    c.EndBlok == eindBlok && 
+                    c.Week == week);
+
+                if (exists != null)
+                {
+                    return;
+                }
+
+                lokaal.Courses.Add(new Course()
                 {
                     WeekDay = weekday,
                     startBlok = startBlok,
                     EndBlok = eindBlok,
-                    Room = new Classroom()
-                    {
-                        RoomId = klas,
-                        Id = Guid.NewGuid(),
-                    },
+                    Klas = klas,
                     VakCode = cursus,
                     Id = Guid.NewGuid()
                 });
+
+                var storedClassroom = lessen.FirstOrDefault(k => k.RoomId == lokaal.RoomId);
+                if (storedClassroom == null)
+                {
+                    lessen.Add(lokaal);
+                }
+                else
+                {
+                    storedClassroom.Courses = lokaal.Courses;
+                }
             }
         }
 
