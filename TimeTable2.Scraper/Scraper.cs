@@ -1,12 +1,7 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using log4net;
 using TimeTable2.Engine;
 
 namespace TimeTable2.Scraper
@@ -17,12 +12,18 @@ namespace TimeTable2.Scraper
         /// Scrape the list of 
         /// </summary>
         /// <param name="filter"></param>
+        /// <param name="quarter">The quarter of the year (1-4)</param>
+        /// <param name="week">The week of the year (1-51)</param>
         /// <returns></returns>
         public List<Classroom> Execute(List<Classroom> filter, int quarter, int week)
         {
+            /*var result = new Scraping
+            {
+                CreatedAt = DateTime.UtcNow
+            };*/
 
             var browser = new HtmlWeb();
-            var klassen = new List<Classroom>();
+            var lokalen = new List<Classroom>();
             var i = 1;
 
             while (true)
@@ -75,7 +76,7 @@ namespace TimeTable2.Scraper
                                 }
 
                                 //Process all other cells
-                                ProcessTableCell(cell, classroom, klassen, weekday, blok);
+                                ProcessTableCell(cell, classroom, lokalen, weekday, blok, week);
                                 weekday++;
                             }
                             blok++;
@@ -85,7 +86,7 @@ namespace TimeTable2.Scraper
                 }
                 else
                 {
-                    return klassen;
+                    return lokalen;
                 }
             }
         }
@@ -94,10 +95,12 @@ namespace TimeTable2.Scraper
         /// Process a cell inside the schedule table
         /// </summary>
         /// <param name="lessonColumn">The column the cell is in</param>
-        /// <param name="lessen">The (already existing) list of lessons</param>
+        /// <param name="lokaal">The room the scrape is for</param>
+        /// <param name="lokalen">The (already existing) list of lessons</param>
         /// <param name="weekday">The identifier of the weekday (1-5)</param>
         /// <param name="j">The row the cell is in</param>
-        private void ProcessTableCell(HtmlNode lessonColumn, Classroom lokaal, List<Classroom> lessen, int weekday, int j, int week)
+        /// <param name="week">The week of the year</param>
+        private void ProcessTableCell(HtmlNode lessonColumn, Classroom lokaal, ICollection<Classroom> lokalen, int weekday, int j, int week)
         {
             //Count the rows of the table inside the cell
             var insideRows = lessonColumn.ChildNodes[0].ChildNodes.Count;
@@ -113,44 +116,38 @@ namespace TimeTable2.Scraper
                 var data = lessonColumn.ChildNodes[0].ChildNodes[0].ChildNodes[0].ChildNodes;
                 var reason = data[0].InnerText;
 
+                //If the classroom does not have any lessons in it, initialize the list
                 if (lokaal.Courses == null)
                 {
                     lokaal.Courses = new List<Course>();
                 }
 
+                //Try to find the course in the list to see if it exists
                 var exists = lokaal.Courses.FirstOrDefault(c =>
                     c.WeekDay == weekday &&
                     c.Week == week);
 
+                //If it already exists, take it and add it to the list.
                 if (exists != null)
                 {
-                    var course = new Course()
+                    lokaal.Courses.Add(exists);
+                }
+                else
+                {
+                    lokaal.Courses.Add(new Course
                     {
-                        Id = exists.Id,
+                        Id = Guid.NewGuid(),
                         WeekDay = weekday,
                         startBlok = 1,
                         EndBlok = 15,
                         VakCode = reason,
+                        Week = week
                     });
-
-                    lokaal.Courses.Remove(exists);
-                    lokaal.Courses.Add(course);
-                    
                 }
-
-                lokaal.Courses.Add(new Course()
-                {
-                    Id = Guid.NewGuid(),
-                    WeekDay = weekday,
-                    startBlok = 1,
-                    EndBlok = 15,
-                    VakCode = reason,
-                });
-
-                var storedClassroom = lessen.FirstOrDefault(k => k.RoomId == lokaal.RoomId);
+                var storedClassroom = lokalen.FirstOrDefault(k => k.RoomId == lokaal.RoomId);
                 if (storedClassroom == null)
                 {
-                    lessen.Add(lokaal);
+                    lokalen.Add(lokaal);
                 }
                 else
                 {
@@ -181,38 +178,28 @@ namespace TimeTable2.Scraper
 
                 if (exists != null)
                 {
-                    var course = new Course()
+                    lokaal.Courses.Add(exists);
+                }
+                else
+                {
+
+                    lokaal.Courses.Add(new Course()
                     {
-                        Id = exists.Id,
                         WeekDay = weekday,
                         startBlok = startBlok,
                         Docent = docent,
                         EndBlok = eindBlok,
                         Klas = klas,
                         VakCode = cursus,
+                        Id = Guid.NewGuid(),
+                        Week = week
                     });
 
-                    lokaal.Courses.Remove(exists);
-                    lokaal.Courses.Add(course);
-
                 }
-
-
-                lokaal.Courses.Add(new Course()
-                {
-                    WeekDay = weekday,
-                    startBlok = startBlok,
-                    Docent = docent,
-                    EndBlok = eindBlok,
-                    Klas = klas,
-                    VakCode = cursus,
-                    Id = Guid.NewGuid()
-                });
-
-                var storedClassroom = lessen.FirstOrDefault(k => k.RoomId == lokaal.RoomId);
+                var storedClassroom = lokalen.FirstOrDefault(k => k.RoomId == lokaal.RoomId);
                 if (storedClassroom == null)
                 {
-                    lessen.Add(lokaal);
+                    lokalen.Add(lokaal);
                 }
                 else
                 {
@@ -235,30 +222,33 @@ namespace TimeTable2.Scraper
                 }
 
                 var exists = lokaal.Courses.FirstOrDefault(c =>
-                    c.WeekDay == weekday && 
-                    c.startBlok == startBlok && 
-                    c.EndBlok == eindBlok && 
+                    c.WeekDay == weekday &&
+                    c.startBlok == startBlok &&
+                    c.EndBlok == eindBlok &&
                     c.Week == week);
 
                 if (exists != null)
                 {
-                    return;
+                    lokaal.Courses.Add(exists);
+                }
+                else
+                {
+                    lokaal.Courses.Add(new Course()
+                    {
+                        WeekDay = weekday,
+                        startBlok = startBlok,
+                        EndBlok = eindBlok,
+                        Klas = klas,
+                        VakCode = cursus,
+                        Id = Guid.NewGuid(),
+                        Week = week
+                    });
                 }
 
-                lokaal.Courses.Add(new Course()
-                {
-                    WeekDay = weekday,
-                    startBlok = startBlok,
-                    EndBlok = eindBlok,
-                    Klas = klas,
-                    VakCode = cursus,
-                    Id = Guid.NewGuid()
-                });
-
-                var storedClassroom = lessen.FirstOrDefault(k => k.RoomId == lokaal.RoomId);
+                var storedClassroom = lokalen.FirstOrDefault(k => k.RoomId == lokaal.RoomId);
                 if (storedClassroom == null)
                 {
-                    lessen.Add(lokaal);
+                    lokalen.Add(lokaal);
                 }
                 else
                 {

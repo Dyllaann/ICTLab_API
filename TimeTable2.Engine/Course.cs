@@ -1,8 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace TimeTable2.Engine
 {
@@ -16,5 +19,8 @@ namespace TimeTable2.Engine
         public string Docent { get; set; }
         public string VakCode { get; set; }
         public string Klas { get; set; }
+
+        [JsonIgnore]
+        public Classroom Classroom { get; set; }
     }
 }

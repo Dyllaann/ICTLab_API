@@ -71,6 +71,10 @@
     <Compile Include="Migrations\201805071321175_RoomId_Unique.Designer.cs">
       <DependentUpon>201805071321175_RoomId_Unique.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805131059212_CourseWithWeeks.cs" />
+    <Compile Include="Migrations\201805131059212_CourseWithWeeks.Designer.cs">
+      <DependentUpon>201805131059212_CourseWithWeeks.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimeTableContext.cs" />
@@ -91,6 +95,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805071321175_RoomId_Unique.resx">
       <DependentUpon>201805071321175_RoomId_Unique.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805131059212_CourseWithWeeks.resx">
+      <DependentUpon>201805131059212_CourseWithWeeks.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

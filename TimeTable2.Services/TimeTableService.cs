@@ -5,21 +5,35 @@ using System.Text;
 using System.Threading.Tasks;
 using TimeTable2.Engine;
 using TimeTable2.Repository;
+using TimeTable2.Repository.Interfaces;
 
 namespace TimeTable2.Services
 {
     public class TimeTableService
     {
-        private IRepository ClassroomRepository { get; }
+        private IClassroomRepository ClassroomRepository { get; }
 
-        public TimeTableService(IRepository classroomRepository)
+        #region CTOR
+        public TimeTableService(IClassroomRepository classroomRepository)
         {
             ClassroomRepository = classroomRepository;
         }
+        #endregion
+
 
         public Classroom GetClassroomById(string roomId)
         {
             return ClassroomRepository.GetClassroomById(roomId);
+        }
+
+        public ICollection<Course> GetClassroomScheduleByCodeAndWeek(string roomCode, int week)
+        {
+            return ClassroomRepository.GetCoursesByRoomAndWeek(roomCode, week);
+        }
+
+        public ICollection<Course> GetClassScheduleByCodeAndWeek(string classCode, int week)
+        {
+            return ClassroomRepository.GetCoursesByClassAndWeek(classCode, week);
         }
     }
 }

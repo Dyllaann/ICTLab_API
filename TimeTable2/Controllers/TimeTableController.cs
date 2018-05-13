@@ -12,6 +12,7 @@ using log4net.Repository.Hierarchy;
 using Swashbuckle.Swagger.Annotations;
 using TimeTable2.Data;
 using TimeTable2.Engine;
+using TimeTable2.Repository;
 using TimeTable2.Scraper;
 using TimeTable2.Services;
 

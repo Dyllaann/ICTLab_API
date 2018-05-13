@@ -48,11 +48,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DbRepository.cs" />
+    <Compile Include="ClassroomRepository.cs" />
+    <Compile Include="Interfaces\IClassroomRepository.cs" />
     <Compile Include="Interfaces\IScraperRepository.cs" />
     <Compile Include="Interfaces\IUserRepository.cs" />
-    <Compile Include="IRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="UserRepository.cs" />
+    <Compile Include="ScraperRepository.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TimeTable2.Engine\TimeTable2.Engine.csproj">

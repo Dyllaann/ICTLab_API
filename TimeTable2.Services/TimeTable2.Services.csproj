@@ -89,7 +89,6 @@
     <Compile Include="APISerivce.cs" />
     <Compile Include="CalendarExample.cs" />
     <Compile Include="Models\OwClassroom.cs" />
-    <Compile Include="ScraperRepository.cs" />
     <Compile Include="ScraperService.cs" />
     <Compile Include="TimeTableService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

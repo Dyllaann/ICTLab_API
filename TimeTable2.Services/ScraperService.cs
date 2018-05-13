@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using TimeTable2.Engine;
-using TimeTable2.Repository;
 using TimeTable2.Repository.Interfaces;
 using TimeTable2.Scraper;
 
@@ -26,6 +21,11 @@ namespace TimeTable2.Services
             var listofrooms = ScraperRepository.GetAllClassrooms();
 
             var roomsWithLessons = scraper.Execute(listofrooms, quarter, week);
+
+            if (roomsWithLessons == null)
+            {
+                return null;
+            }
 
             ScraperRepository.AddOrUpdateClassrooms(roomsWithLessons);
 
