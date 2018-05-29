@@ -87,7 +87,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="APISerivce.cs" />
-    <Compile Include="CalendarExample.cs" />
+    <Compile Include="BookingService.cs" />
     <Compile Include="Models\OwClassroom.cs" />
     <Compile Include="ScraperService.cs" />
     <Compile Include="TimeTableService.cs" />

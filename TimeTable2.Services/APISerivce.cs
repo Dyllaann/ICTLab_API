@@ -42,7 +42,7 @@ namespace TimeTable2.Services
             {
                 tokenResponse = JsonConvert.DeserializeObject<TokenResponse>(data);
             }
-            catch (JsonSerializationException ex)
+            catch (JsonSerializationException)
             {
                 return null;
             }

@@ -22,13 +22,8 @@ namespace TimeTable2.Repository
 
         public ICollection<Course> GetCoursesByClassAndWeek(string classCode, int week)
         {
-            var courses = Context.Set<Course>().Where(c => c.Week == week && c.Klas == classCode).ToList();
+            var courses = Context.Set<Course>().Where(c => c.Week == week && c.Class == classCode).ToList();
             return courses;
-        }
-
-        public Classroom GetClassroomById(string roomId)
-        {
-            throw new NotImplementedException();
         }
     }
 }

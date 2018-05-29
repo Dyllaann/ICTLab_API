@@ -138,10 +138,11 @@ namespace TimeTable2.Scraper
                     {
                         Id = Guid.NewGuid(),
                         WeekDay = weekday,
-                        startBlok = 1,
-                        EndBlok = 15,
-                        VakCode = reason,
-                        Week = week
+                        StartBlock = 1,
+                        EndBlock = 15,
+                        CourseCode = reason,
+                        Week = week,
+                        Room = lokaal.RoomId
                     });
                 }
                 var storedClassroom = lokalen.FirstOrDefault(k => k.RoomId == lokaal.RoomId);
@@ -172,8 +173,8 @@ namespace TimeTable2.Scraper
 
                 var exists = lokaal.Courses.FirstOrDefault(c =>
                     c.WeekDay == weekday &&
-                    c.startBlok == startBlok &&
-                    c.EndBlok == eindBlok &&
+                    c.StartBlock == startBlok &&
+                    c.EndBlock == eindBlok &&
                     c.Week == week);
 
                 if (exists != null)
@@ -186,13 +187,14 @@ namespace TimeTable2.Scraper
                     lokaal.Courses.Add(new Course()
                     {
                         WeekDay = weekday,
-                        startBlok = startBlok,
-                        Docent = docent,
-                        EndBlok = eindBlok,
-                        Klas = klas,
-                        VakCode = cursus,
+                        StartBlock = startBlok,
+                        Teacher = docent,
+                        EndBlock = eindBlok,
+                        Class = klas,
+                        CourseCode = cursus,
                         Id = Guid.NewGuid(),
-                        Week = week
+                        Week = week,
+                        Room = lokaal.RoomId
                     });
 
                 }
@@ -223,8 +225,8 @@ namespace TimeTable2.Scraper
 
                 var exists = lokaal.Courses.FirstOrDefault(c =>
                     c.WeekDay == weekday &&
-                    c.startBlok == startBlok &&
-                    c.EndBlok == eindBlok &&
+                    c.StartBlock == startBlok &&
+                    c.EndBlock == eindBlok &&
                     c.Week == week);
 
                 if (exists != null)
@@ -236,12 +238,13 @@ namespace TimeTable2.Scraper
                     lokaal.Courses.Add(new Course()
                     {
                         WeekDay = weekday,
-                        startBlok = startBlok,
-                        EndBlok = eindBlok,
-                        Klas = klas,
-                        VakCode = cursus,
+                        StartBlock = startBlok,
+                        EndBlock = eindBlok,
+                        Class = klas,
+                        CourseCode = cursus,
                         Id = Guid.NewGuid(),
-                        Week = week
+                        Week = week,
+                        Room = lokaal.RoomId
                     });
                 }
 

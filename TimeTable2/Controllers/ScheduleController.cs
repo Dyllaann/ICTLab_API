@@ -6,7 +6,6 @@ using System.Web.Http;
 using Swashbuckle.Swagger.Annotations;
 using TimeTable2.Data;
 using TimeTable2.Engine;
-using TimeTable2.Models;
 using TimeTable2.Repository;
 using TimeTable2.Services;
 
@@ -56,11 +55,11 @@ namespace TimeTable2.Controllers
         [HttpGet]
         [SwaggerOperation("Personal/Today")]
         [Route("Personal/Today")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(OwSchedule))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(Course))]
         [SwaggerResponse(HttpStatusCode.NotFound, Description = "Classroom schedule was not found")]
         public HttpResponseMessage GetPersonalScheduleToday()
         {
-            return Request.CreateResponse(HttpStatusCode.OK, new OwSchedule());
+            return Request.CreateResponse(HttpStatusCode.OK, new Course());
         }
 
 

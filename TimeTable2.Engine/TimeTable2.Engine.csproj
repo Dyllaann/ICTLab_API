@@ -83,6 +83,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AvailabilityStatus.cs" />
+    <Compile Include="Booking.cs" />
     <Compile Include="Classroom.cs" />
     <Compile Include="Course.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

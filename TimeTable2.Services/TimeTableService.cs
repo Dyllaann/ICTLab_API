@@ -21,11 +21,6 @@ namespace TimeTable2.Services
         #endregion
 
 
-        public Classroom GetClassroomById(string roomId)
-        {
-            return ClassroomRepository.GetClassroomById(roomId);
-        }
-
         public ICollection<Course> GetClassroomScheduleByCodeAndWeek(string roomCode, int week)
         {
             return ClassroomRepository.GetCoursesByRoomAndWeek(roomCode, week);

@@ -75,6 +75,14 @@
     <Compile Include="Migrations\201805131059212_CourseWithWeeks.Designer.cs">
       <DependentUpon>201805131059212_CourseWithWeeks.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201805291024187_Bookings.cs" />
+    <Compile Include="Migrations\201805291024187_Bookings.Designer.cs">
+      <DependentUpon>201805291024187_Bookings.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201805292000455_Rename.cs" />
+    <Compile Include="Migrations\201805292000455_Rename.Designer.cs">
+      <DependentUpon>201805292000455_Rename.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimeTableContext.cs" />
@@ -98,6 +106,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201805131059212_CourseWithWeeks.resx">
       <DependentUpon>201805131059212_CourseWithWeeks.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805291024187_Bookings.resx">
+      <DependentUpon>201805291024187_Bookings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201805292000455_Rename.resx">
+      <DependentUpon>201805292000455_Rename.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

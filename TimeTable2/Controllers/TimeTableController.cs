@@ -1,19 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using System.Web.Configuration;
 using System.Web.Http;
 using log4net;
-using log4net.Repository.Hierarchy;
 using Swashbuckle.Swagger.Annotations;
 using TimeTable2.Data;
 using TimeTable2.Engine;
 using TimeTable2.Repository;
-using TimeTable2.Scraper;
 using TimeTable2.Services;
 
 namespace TimeTable2.Controllers

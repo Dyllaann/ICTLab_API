@@ -1,0 +1,13 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using TimeTable2.Repository.Interfaces;
+
+namespace TimeTable2.Tests.Resources
+{
+    public class TestBookingRepository : IBookingRepository
+    {
+    }
+}

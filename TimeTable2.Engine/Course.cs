@@ -14,12 +14,13 @@ namespace TimeTable2.Engine
         public Guid Id { get; set; }
         public int Week { get; set; }
         public int WeekDay { get; set; }
-        public int startBlok { get; set; }
-        public int EndBlok { get; set; }
-        public string Docent { get; set; }
-        public string VakCode { get; set; }
-        public string Klas { get; set; }
-
+        public int StartBlock { get; set; }
+        public int EndBlock { get; set; }
+        public string Teacher { get; set; }
+        public string CourseCode { get; set; }
+        public string Class { get; set; }
+        public string Room { get;set; }
+            
         [JsonIgnore]
         public Classroom Classroom { get; set; }
     }
