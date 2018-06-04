@@ -81,10 +81,13 @@ namespace TimeTable2.Controllers
             var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
             var scraperRepository = new ScraperRepository(context);
             var classroomRepository = new ClassroomRepository(context);
-            var scraperService = new ScraperService(scraperRepository, classroomRepository);
-            var html = await scraperService.Scrape(quarter, week);
+            var bookingRepository = new BookingRepository(context);
+            var classRepository = new ClassRepository(context);
+            var scraperService = new ScraperService(scraperRepository, classroomRepository, classRepository, bookingRepository);
 
-            return Request.CreateResponse(HttpStatusCode.OK, html);
+            Task.Run(() => scraperService.Scrape(quarter, week));
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

@@ -66,6 +66,10 @@
       <Project>{C1C742FC-FFA5-402A-AB00-D3EAF2A69542}</Project>
       <Name>TimeTable2.Repository</Name>
     </ProjectReference>
+    <ProjectReference Include="..\TimeTable2.Tools\TimeTable2.Tools.csproj">
+      <Project>{AE43CAB7-77EF-4D46-9EBE-37D2C4D2CAA7}</Project>
+      <Name>TimeTable2.Tools</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

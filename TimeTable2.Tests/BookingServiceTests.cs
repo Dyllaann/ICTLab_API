@@ -28,7 +28,6 @@ namespace TimeTable2.Tests
                         WeekDay = 1,
                         StartBlock = 2,
                         EndBlock = 5,
-                        Classroom = c
                     },
                     new Course()
                     {
@@ -36,7 +35,6 @@ namespace TimeTable2.Tests
                         WeekDay = 1,
                         StartBlock = 7,
                         EndBlock = 9,
-                        Classroom = c
                     }
                 }
             };

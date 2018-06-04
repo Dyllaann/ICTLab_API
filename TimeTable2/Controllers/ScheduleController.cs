@@ -15,10 +15,9 @@ namespace TimeTable2.Controllers
     [RoutePrefix("api/Schedule")]
     public class ScheduleController : TimeTableApiController
     {
-        #region ScraperClassroom
         [HttpGet]
-        [SwaggerOperation("ScraperClassroom/{roomCode}/{week}")]
-        [Route("ScraperClassroom/{roomCode}/{week}")]
+        [SwaggerOperation("Classroom/{roomCode}/{week}")]
+        [Route("Classroom/{roomCode}/{week}")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<Course>))]
         [SwaggerResponse(HttpStatusCode.NotFound, Description = "Classroom schedule was not found")]
         public HttpResponseMessage GetScheduleForRoom(string roomCode, int week)
@@ -31,9 +30,7 @@ namespace TimeTable2.Controllers
                 
             return Request.CreateResponse(HttpStatusCode.OK, room);
         }
-        #endregion
 
-        #region Class
         [HttpGet]
         [SwaggerOperation("Class/{classCode}/{week}")]
         [Route("Class/{classCode}/{week}")] 
@@ -49,20 +46,6 @@ namespace TimeTable2.Controllers
             
             return Request.CreateResponse(HttpStatusCode.OK, room);
         }
-        #endregion
 
-        #region Student / Teachers
-        [HttpGet]
-        [SwaggerOperation("Personal/Today")]
-        [Route("Personal/Today")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(Course))]
-        [SwaggerResponse(HttpStatusCode.NotFound, Description = "Classroom schedule was not found")]
-        public HttpResponseMessage GetPersonalScheduleToday()
-        {
-            return Request.CreateResponse(HttpStatusCode.OK, new Course());
-        }
-
-
-        #endregion
     }
 }

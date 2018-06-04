@@ -63,29 +63,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ContextFactory.cs" />
-    <Compile Include="Migrations\201805071318583_InitialMigration.cs" />
-    <Compile Include="Migrations\201805071318583_InitialMigration.Designer.cs">
-      <DependentUpon>201805071318583_InitialMigration.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201805071321175_RoomId_Unique.cs" />
-    <Compile Include="Migrations\201805071321175_RoomId_Unique.Designer.cs">
-      <DependentUpon>201805071321175_RoomId_Unique.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201805131059212_CourseWithWeeks.cs" />
-    <Compile Include="Migrations\201805131059212_CourseWithWeeks.Designer.cs">
-      <DependentUpon>201805131059212_CourseWithWeeks.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201805291024187_Bookings.cs" />
-    <Compile Include="Migrations\201805291024187_Bookings.Designer.cs">
-      <DependentUpon>201805291024187_Bookings.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201805292000455_Rename.cs" />
-    <Compile Include="Migrations\201805292000455_Rename.Designer.cs">
-      <DependentUpon>201805292000455_Rename.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201805311300334_EnglishBooking.cs" />
-    <Compile Include="Migrations\201805311300334_EnglishBooking.Designer.cs">
-      <DependentUpon>201805311300334_EnglishBooking.cs</DependentUpon>
+    <Compile Include="Migrations\201806041831360_InitialMigration.cs" />
+    <Compile Include="Migrations\201806041831360_InitialMigration.Designer.cs">
+      <DependentUpon>201806041831360_InitialMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -102,23 +82,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201805071318583_InitialMigration.resx">
-      <DependentUpon>201805071318583_InitialMigration.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201805071321175_RoomId_Unique.resx">
-      <DependentUpon>201805071321175_RoomId_Unique.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201805131059212_CourseWithWeeks.resx">
-      <DependentUpon>201805131059212_CourseWithWeeks.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201805291024187_Bookings.resx">
-      <DependentUpon>201805291024187_Bookings.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201805292000455_Rename.resx">
-      <DependentUpon>201805292000455_Rename.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201805311300334_EnglishBooking.resx">
-      <DependentUpon>201805311300334_EnglishBooking.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201806041831360_InitialMigration.resx">
+      <DependentUpon>201806041831360_InitialMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

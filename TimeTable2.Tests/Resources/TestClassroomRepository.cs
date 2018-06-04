@@ -23,14 +23,26 @@ namespace TimeTable2.Tests.Resources
 
         public ICollection<Course> GetCoursesByRoomAndWeek(string roomCode, int week)
         {
-            var courses = Courses.Where(c => c.Week == week && c.Classroom.RoomId == roomCode).ToList();
+            var courses = Courses.Where(c => c.Week == week && c.Rooms.Contains(c.Rooms.FirstOrDefault(r => r.RoomId == roomCode))).ToList();
             return courses;
         }
 
         public ICollection<Course> GetCoursesByClassAndWeek(string classCode, int week)
         {
-            var courses = Courses.Where(c => c.Week == week && c.Class == classCode).ToList();
+            var courses = Courses.Where(c => c.Week == week && c.Classes.Find(d => d.Name == classCode) != null).ToList();
             return courses;
+        }
+
+        public Classroom GetClassroomWithCourses(string roomCode)
+        {
+            return Classrooms.FirstOrDefault(c => c.RoomId == roomCode);
+        }
+
+        public Classroom AddOrUpdateClassroom(Classroom classroom)
+        {
+            Classrooms.Remove(classroom);
+            Classrooms.Add(classroom);
+            return classroom;
         }
     }
 }

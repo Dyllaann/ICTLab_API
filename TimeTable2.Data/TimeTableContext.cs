@@ -20,6 +20,7 @@ namespace TimeTable2.Data
         public DbSet<Classroom> Classrooms { get; set; }
         public DbSet<Course> Courses { get; set; }
         public DbSet<Booking> Bookings { get; set; }
+        public DbSet<Class> Classes { get; set; }
 
 
 

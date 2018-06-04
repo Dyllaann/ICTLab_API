@@ -11,17 +11,18 @@ namespace TimeTable2.Engine
 {
     public class Course
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Key]
         public Guid Id { get; set; }
         public int Week { get; set; }
         public int WeekDay { get; set; }
         public int StartBlock { get; set; }
         public int EndBlock { get; set; }
         public string Teacher { get; set; }
+        public string Description { get; set; }
         public string CourseCode { get; set; }
-        public string Class { get; set; }
-        public string Room { get;set; }
-            
-        [JsonIgnore]
-        public Classroom Classroom { get; set; }
+
+        public List<Class> Classes { get; set; }
+        public List<Classroom> Rooms { get;set; }
     }
 }

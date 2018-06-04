@@ -48,9 +48,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BookingRepository.cs" />
+    <Compile Include="ClassRepository.cs" />
     <Compile Include="DbRepository.cs" />
     <Compile Include="ClassroomRepository.cs" />
     <Compile Include="Interfaces\IBookingRepository.cs" />
+    <Compile Include="Interfaces\IClassRepository.cs" />
     <Compile Include="Interfaces\IClassroomRepository.cs" />
     <Compile Include="Interfaces\IScraperRepository.cs" />
     <Compile Include="Interfaces\IUserRepository.cs" />
