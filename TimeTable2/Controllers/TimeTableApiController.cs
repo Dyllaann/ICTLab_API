@@ -9,12 +9,14 @@ using System.Web.Configuration;
 using System.Web.Http;
 using System.Web.Http.Controllers;
 using log4net;
+using TimeTable2.Engine;
 using TimeTable2.Services;
 
 namespace TimeTable2.Controllers
 {
     public class TimeTableApiController : ApiController
     {
+        public GoogleUserProfile UserProfile { get; set; }
         public string UserId { get; set; }
 
         public override async Task<HttpResponseMessage> ExecuteAsync(HttpControllerContext controllerContext, CancellationToken cancellationToken)
@@ -75,13 +77,21 @@ namespace TimeTable2.Controllers
             var data = Convert.FromBase64String(token);
             var decodedString = Encoding.UTF8.GetString(data);
 
-            var dashboardUsername = WebConfigurationManager.AppSettings["BasicAuth.Dashboard.Username"];
-            var dashboardToken = WebConfigurationManager.AppSettings["BasicAuth.Dashboard.Token"];
-            var dashboard = $"{dashboardUsername}:{dashboardToken}";
-
-            if (decodedString == dashboard)
+            var dashboardRegex = Regex.Match(decodedString, "Dashboard:(.*):(.*):(.*):(.*):(.*)");
+            if (dashboardRegex.Success)
             {
-                UserId = "-1";
+                var dashboardToken = WebConfigurationManager.AppSettings["BasicAuth.Dashboard.Token"];
+                if (dashboardRegex.Groups[1].Value != dashboardToken) return false;
+
+                UserId = dashboardRegex.Groups[2].Value;
+                UserProfile = new GoogleUserProfile
+                {
+                    UserId = UserId,
+                    Email = dashboardRegex.Groups[3].Value,
+                    Name = dashboardRegex.Groups[4].Value,
+                    FamilyName = dashboardRegex.Groups[5].Value,
+                    GivenName = dashboardRegex.Groups[4].Value + " " + dashboardRegex.Groups[5].Value
+                };
                 return true;
             }
 
@@ -99,6 +109,7 @@ namespace TimeTable2.Controllers
             var authenticated = await APISerivce.Authorize(token, logger);
             if (authenticated == null) return false;
 
+            UserProfile = authenticated;
             UserId = authenticated.UserId;
             return true;
         }

@@ -14,6 +14,13 @@ namespace TimeTable2.Repository
         }
 
 
+        public ICollection<Classroom> GetAllClassrooms()
+        {
+            return Context.Set<Classroom>().ToList();
+        }
+
+
+
         public ICollection<Course> GetCoursesByRoomAndWeek(string roomCode, int week)
         {
             var courses = Context.Set<Course>().Where(c => c.Week == week && c.Classroom.RoomId == roomCode).ToList();

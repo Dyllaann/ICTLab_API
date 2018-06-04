@@ -9,6 +9,9 @@ namespace TimeTable2.Repository.Interfaces
 {
     public interface IClassroomRepository
     {
+        ICollection<Classroom> GetAllClassrooms();
+
+
         ICollection<Course> GetCoursesByRoomAndWeek(string roomCode, int week);
         ICollection<Course> GetCoursesByClassAndWeek(string classCode, int week);
     }

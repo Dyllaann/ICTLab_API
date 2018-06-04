@@ -12,6 +12,14 @@ namespace TimeTable2.Tests.Resources
     public class TestClassroomRepository : IClassroomRepository
     {
         public List<Course> Courses { get; set; }
+        public List<Classroom> Classrooms { get; set; }
+
+        public ICollection<Classroom> GetAllClassrooms()
+        {
+            return Classrooms;
+        }
+
+
 
         public ICollection<Course> GetCoursesByRoomAndWeek(string roomCode, int week)
         {

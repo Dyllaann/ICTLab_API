@@ -26,18 +26,24 @@ namespace TimeTable2.Services
         {
             var logger = LogManager.GetLogger("BookingService");
 
-            var existingLessons = ClassroomRepository.GetCoursesByRoomAndWeek(booking.LokaalCode, booking.Week);
-            var blocking = existingLessons.Where(l => l.WeekDay == booking.WeekDay
-                                       && (l.StartBlock > booking.StartBlok
-                                       && l.EndBlock > booking.EndBlok
-                       
-                                       || l.StartBlock < booking.StartBlok
-                                       && l.EndBlock < booking.EndBlok)).ToList();
-            if (blocking.Count > 0)
+            var existingLessons = ClassroomRepository.GetCoursesByRoomAndWeek(booking.Classroom, booking.Week);
+            var blockingLessons = CourseAvailability(existingLessons, booking);
+
+            if (blockingLessons.Count > 0)
             {
-                logger.Warn($"There was already a lesson planned during this time for this booking. {blocking.Count}");
+                logger.Info($"There was already a lesson planned during this time for this booking. {blockingLessons.Count}");
                 return null;
             }
+
+            var existingBookings = BookingRepository.GetBookingsByRoomAndWeek(booking.Classroom, booking.Week);
+            var blockingBookings = BookingAvailability(existingBookings, booking);
+            if (blockingBookings.Count > 0)
+            {
+                logger.Info($"There was already a booking planned during this time for this booking. {blockingBookings.Count}");
+                return null;
+            }
+
+            
 
 
             return booking;
@@ -45,13 +51,31 @@ namespace TimeTable2.Services
 
 
 
-        public List<Course> BookingAvailability(ICollection<Course> existingLessons, Booking booking)
+        public List<Course> CourseAvailability(ICollection<Course> existingLessons, Booking booking)
         {
             var blocking = existingLessons.Where(l => l.WeekDay == booking.WeekDay 
-                                                      && ((booking.StartBlok >= l.StartBlock && booking.StartBlok <= l.EndBlock)
-                                                      || (booking.EndBlok >= l.StartBlock && booking.EndBlok <= l.EndBlock)
-                                                      || (booking.StartBlok <= l.StartBlock && booking.EndBlok >= l.EndBlock)))
+                                                      //Starts inside another lesson
+                                                      && (booking.StartBlock >= l.StartBlock && booking.StartBlock <= l.EndBlock
+                                                     //Ends inside another lesson
+                                                      || booking.EndBlock >= l.StartBlock && booking.EndBlock <= l.EndBlock
+                                                      //Overlaps entire lesson
+                                                      || booking.StartBlock <= l.StartBlock && booking.EndBlock >= l.EndBlock))
                                                     .ToList();
+
+
+            return blocking;
+        }
+            
+        public List<Booking> BookingAvailability(ICollection<Booking> existingLessons, Booking booking)
+        {
+            var blocking = existingLessons.Where(l => l.WeekDay == booking.WeekDay
+                                                      //Starts inside another lesson
+                                                      && (booking.StartBlock >= l.StartBlock && booking.StartBlock <= l.EndBlock
+                                                          //Ends inside another lesson
+                                                          || booking.EndBlock >= l.StartBlock && booking.EndBlock <= l.EndBlock
+                                                          //Overlaps entire lesson
+                                                          || booking.StartBlock <= l.StartBlock && booking.EndBlock >= l.EndBlock))
+                .ToList();
 
 
             return blocking;

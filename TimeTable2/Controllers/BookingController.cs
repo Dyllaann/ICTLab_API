@@ -30,7 +30,11 @@ namespace TimeTable2.Controllers
             var service = new BookingService(bookingRepository, classroomRepository);
 
             booking.Owner = UserId;
-            service.BookRoom(booking);
+            var bookingService = service.BookRoom(booking);
+            if (bookingService == null)
+            {
+
+            }
 
             return Request.CreateResponse(HttpStatusCode.OK, new Booking());
         }

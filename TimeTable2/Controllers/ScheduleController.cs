@@ -15,10 +15,10 @@ namespace TimeTable2.Controllers
     [RoutePrefix("api/Schedule")]
     public class ScheduleController : TimeTableApiController
     {
-        #region Room
+        #region Lokaal
         [HttpGet]
-        [SwaggerOperation("Room/{roomCode}/{week}")]
-        [Route("Room/{roomCode}/{week}")]
+        [SwaggerOperation("Lokaal/{roomCode}/{week}")]
+        [Route("Lokaal/{roomCode}/{week}")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<Course>))]
         [SwaggerResponse(HttpStatusCode.NotFound, Description = "Classroom schedule was not found")]
         public HttpResponseMessage GetScheduleForRoom(string roomCode, int week)

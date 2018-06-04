@@ -88,6 +88,7 @@
   <ItemGroup>
     <Compile Include="APISerivce.cs" />
     <Compile Include="BookingService.cs" />
+    <Compile Include="ClassroomService.cs" />
     <Compile Include="Models\OwClassroom.cs" />
     <Compile Include="ScraperService.cs" />
     <Compile Include="TimeTableService.cs" />

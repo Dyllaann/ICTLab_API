@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.ComponentModel.DataAnnotations.Schema;
+using Newtonsoft.Json;
 
 namespace TimeTable2.Engine
 {
@@ -12,6 +13,7 @@ namespace TimeTable2.Engine
     {
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key, Column(Order = 0)]
+        [JsonIgnore]
         public Guid Id { get; set; }
 
         [Index("RoomId_Index", IsUnique = true)]
@@ -22,7 +24,6 @@ namespace TimeTable2.Engine
 
         public MaintenanceStatus Maintenance { get; set; }
 
-        
         public IList<Course> Courses { get; set; }
     }
 }

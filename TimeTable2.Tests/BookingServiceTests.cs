@@ -52,16 +52,16 @@ namespace TimeTable2.Tests
             var booking4 = GenerateBooking("H.1.110", 8, 10, 1, 1); // 8-11 out 2-5 and in 7-9 -> 1
 
             //Then
-            var availability1 = service.BookingAvailability(existingLessons, booking1);
+            var availability1 = service.CourseAvailability(existingLessons, booking1);
             Assert.AreEqual(0, availability1.Count, "A1 failed");
 
-            var availability2 = service.BookingAvailability(existingLessons, booking2);
+            var availability2 = service.CourseAvailability(existingLessons, booking2);
             Assert.AreEqual(1, availability2.Count, "A2 failed");
 
-            var availability3 = service.BookingAvailability(existingLessons, booking3);
+            var availability3 = service.CourseAvailability(existingLessons, booking3);
             Assert.AreEqual(2, availability3.Count, "A3 failed");
 
-            var availability4 = service.BookingAvailability(existingLessons, booking4);
+            var availability4 = service.CourseAvailability(existingLessons, booking4);
             Assert.AreEqual(1, availability4.Count, "A4 failed");
         }
 
@@ -69,9 +69,9 @@ namespace TimeTable2.Tests
         {
             return new Booking()
             {
-                LokaalCode = lokaalCode,
-                StartBlok = start,
-                EndBlok = end,
+                Classroom = lokaalCode,
+                StartBlock = start,
+                EndBlock = end,
                 Week = week,
                 WeekDay = weekday
             };

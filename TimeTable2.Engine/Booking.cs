@@ -16,10 +16,10 @@ namespace TimeTable2.Engine
         public Guid Key { get; set; }
         public int Week { get; set; }
         public int WeekDay { get; set; }
-        public int StartBlok { get; set; }
-        public int EndBlok { get; set; }
-        public string AantalGasten { get; set; }
-        public string LokaalCode { get; set; }
+        public int StartBlock { get; set; }
+        public int EndBlock { get; set; }
+        public string Guests { get; set; }
+        public string Classroom { get; set; }
 
 
         [JsonIgnore]
