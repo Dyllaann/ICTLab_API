@@ -88,6 +88,8 @@
     <Compile Include="Course.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MaintenanceStatus.cs" />
+    <Compile Include="Scraper\ScraperClassroom.cs" />
+    <Compile Include="Scraper\ScraperCourse.cs" />
     <Compile Include="Scraper\Scraping.cs" />
     <Compile Include="TokenResponse.cs" />
     <Compile Include="GoogleUserProfile.cs" />

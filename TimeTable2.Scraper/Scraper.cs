@@ -1,279 +1,98 @@
 ﻿using HtmlAgilityPack;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Web.Configuration;
+using Newtonsoft.Json;
 using TimeTable2.Engine;
+using TimeTable2.Engine.Scraper;
+using TimeTable2.Repository.Interfaces;
 
 namespace TimeTable2.Scraper
 {
     public class WebScraper
     {
+        public static string BaseUrl =
+        "https://hint.hr.nl/xsp/public/InfApp/2018gr6/getLokaalRooster.xsp?sharedSecret={0}&element={1}&startDate={2}&endDate={3}&json=1";
+
         /// <summary>
         /// Scrape the list of 
         /// </summary>
+        /// <param name="classRoomRepository"></param>
         /// <param name="filter"></param>
         /// <param name="quarter">The quarter of the year (1-4)</param>
         /// <param name="week">The week of the year (1-51)</param>
         /// <returns></returns>
-        public List<Classroom> Execute(List<Classroom> filter, int quarter, int week)
+        public async Task<List<Classroom>> Execute(IClassroomRepository classRoomRepository, int week)
         {
-            /*var result = new Scraping
+            
+            var rooms = classRoomRepository.GetAllClassrooms().ToList();
+
+            var startDate = FirstDateOfWeekIso8601(DateTime.Today.Year, week);
+            var endDate = startDate.AddDays(4);
+
+            var secret = WebConfigurationManager.AppSettings["Hint.Api.Secret"];
+
+            foreach (var room in rooms)
             {
-                CreatedAt = DateTime.UtcNow
-            };*/
+                var roomName = room.RoomId;
 
-            var browser = new HtmlWeb();
-            var lokalen = new List<Classroom>();
-            var i = 1;
+                var start = $"{startDate.Year}-{startDate.Month:00}-{startDate.Day:00}";
+                var end = $"{endDate.Year}-{endDate.Month:00}-{endDate.Day:00}";
 
-            while (true)
-            {
-                var formattedNumber = i.ToString().PadLeft(5, '0');
-                var url = $"http://misc.hro.nl/roosterdienst/webroosters/CMI/kw{quarter}/{week}/r/r{formattedNumber}.htm";
+                var url = string.Format(BaseUrl, secret, roomName, start, end);
 
-                var doc = browser.Load(url);
+                var client = new HttpClient();
+                var request = client.GetAsync(new Uri(url)).Result;
+                if (!request.IsSuccessStatusCode) continue;
 
-                var document = ReplaceLines(doc);
-                var nodes = document.DocumentNode;
+                var data = await request.Content.ReadAsStringAsync();
+                var classroom = JsonConvert.DeserializeObject<ScraperClassroom>(data);
 
-                var foundText = nodes.SelectNodes("//*[contains(., 'was not found on this server')]");
-                if (foundText == null)
+                var existingClassroom = classRoomRepository.GetClassroomWithCourses(classroom.ElementName);
+
+                foreach (var course in room.Courses)
                 {
-                    //Get the actual room code as readable text
-                    var roomNumberNode = nodes.SelectNodes("/html[1]/body[1]/center[1]/font[2]").FirstOrDefault();
-                    var number = roomNumberNode?.InnerText;
-                    var numberFiltered = number?.Substring(0, number.Length - 1);
-                    var classroom = filter.FirstOrDefault(c => c.RoomId == numberFiltered);
 
-                    //If it exists in the filter list
-                    if (classroom != null)
-                    {
-                        //Get all the table ROWS for this room
-                        var table = nodes.SelectNodes("/html[1]/body[1]/center[1]/table[1]/tr");
-
-                        var blok = 1;
-                        // j=2 to skip the first row as table headers (horizontal searching)
-                        for (var j = 2; j <= table.Count; j++)
-                        {
-                            //Get all the columns PER row for the room
-                            var tableColumns = nodes.SelectNodes($"/html[1]/body[1]/center[1]/table[1]/tr[{j}]/td");
-
-                            if (tableColumns == null) //happens on days the room is completely free
-                            {
-                                continue;
-                            }
-
-                            var weekday = 0;
-                            //For each column we have in the row (vertical searching)
-                            foreach (var cell in tableColumns)
-                            {
-
-                                //Skip if this is the time indication cell
-                                if (tableColumns.IndexOf(cell) == 0)
-                                {
-                                    weekday++;
-                                    continue;
-                                }
-
-                                //Process all other cells
-                                ProcessTableCell(cell, classroom, lokalen, weekday, blok, week);
-                                weekday++;
-                            }
-                            blok++;
-                        }
-                    }
-                    i++;
-                }
-                else
-                {
-                    return lokalen;
                 }
             }
+
+           
+
+            return rooms;
         }
 
-        /// <summary>
-        /// Process a cell inside the schedule table
-        /// </summary>
-        /// <param name="lessonColumn">The column the cell is in</param>
-        /// <param name="lokaal">The room the scrape is for</param>
-        /// <param name="lokalen">The (already existing) list of lessons</param>
-        /// <param name="weekday">The identifier of the weekday (1-5)</param>
-        /// <param name="j">The row the cell is in</param>
-        /// <param name="week">The week of the year</param>
-        private void ProcessTableCell(HtmlNode lessonColumn, Classroom lokaal, ICollection<Classroom> lokalen, int weekday, int j, int week)
+        public static DateTime FirstDateOfWeekIso8601(int year, int weekOfYear)
         {
-            //Count the rows of the table inside the cell
-            var insideRows = lessonColumn.ChildNodes[0].ChildNodes.Count;
-            //Count the elements of the content of the cell inside the table of the cell
-            var innerRows = lessonColumn.ChildNodes[0].ChildNodes[0].ChildNodes[0].ChildNodes.Count;
+            var jan1 = new DateTime(year, 1, 1);
+            var daysOffset = DayOfWeek.Thursday - jan1.DayOfWeek;
 
+            // Use first Thursday in January to get first week of the year as
+            // it will never be in Week 52/53
+            var firstThursday = jan1.AddDays(daysOffset);
+            var cal = CultureInfo.CurrentCulture.Calendar;
+            int firstWeek = cal.GetWeekOfYear(firstThursday, CalendarWeekRule.FirstFourDayWeek, DayOfWeek.Monday);
 
-            //If we have information in the cell of the table and the block lasts the entire day
-            //But we don't have three information cells inside the table
-            //The day has to be something special.
-            if (insideRows != 3 && innerRows == 2 && int.Parse(lessonColumn.Attributes["rowspan"].Value) / 2 == 15)
+            var weekNum = weekOfYear;
+            // As we're adding days to a date in Week 1,
+            // we need to subtract 1 in order to get the right date for week #1
+            if (firstWeek == 1)
             {
-                var data = lessonColumn.ChildNodes[0].ChildNodes[0].ChildNodes[0].ChildNodes;
-                var reason = data[0].InnerText;
-
-                //If the classroom does not have any lessons in it, initialize the list
-                if (lokaal.Courses == null)
-                {
-                    lokaal.Courses = new List<Course>();
-                }
-
-                //Try to find the course in the list to see if it exists
-                var exists = lokaal.Courses.FirstOrDefault(c =>
-                    c.WeekDay == weekday &&
-                    c.Week == week);
-
-                //If it already exists, take it and add it to the list.
-                if (exists != null)
-                {
-                    lokaal.Courses.Add(exists);
-                }
-                else
-                {
-                    lokaal.Courses.Add(new Course
-                    {
-                        Id = Guid.NewGuid(),
-                        WeekDay = weekday,
-                        StartBlock = 1,
-                        EndBlock = 15,
-                        CourseCode = reason,
-                        Week = week,
-                        Room = lokaal.RoomId
-                    });
-                }
-                var storedClassroom = lokalen.FirstOrDefault(k => k.RoomId == lokaal.RoomId);
-                if (storedClassroom == null)
-                {
-                    lokalen.Add(lokaal);
-                }
-                else
-                {
-                    storedClassroom.Courses = lokaal.Courses;
-                }
+                weekNum -= 1;
             }
 
-            //If there are three information cells, and the first one has two children, there is a normal lesson this cell.
-            if (lessonColumn.ChildNodes[0].ChildNodes.Count == 3 && innerRows == 2)
-            {
-                var data = lessonColumn.ChildNodes[0].ChildNodes;
-                var startBlok = j;
-                var eindBlok = startBlok + int.Parse(lessonColumn.Attributes["rowspan"].Value) / 2 - 1;
-                var klas = data[0].InnerText.Replace(" ", "").Replace(".", "");
-                var docent = data[1].InnerText.Replace(" ", "");
-                var cursus = data[2].InnerText.Replace(" ", "");
+            // Using the first Thursday as starting week ensures that we are starting in the right year
+            // then we add number of weeks multiplied with days
+            var result = firstThursday.AddDays(weekNum * 7);
 
-                if (lokaal.Courses == null)
-                {
-                    lokaal.Courses = new List<Course>();
-                }
-
-                var exists = lokaal.Courses.FirstOrDefault(c =>
-                    c.WeekDay == weekday &&
-                    c.StartBlock == startBlok &&
-                    c.EndBlock == eindBlok &&
-                    c.Week == week);
-
-                if (exists != null)
-                {
-                    lokaal.Courses.Add(exists);
-                }
-                else
-                {
-
-                    lokaal.Courses.Add(new Course()
-                    {
-                        WeekDay = weekday,
-                        StartBlock = startBlok,
-                        Teacher = docent,
-                        EndBlock = eindBlok,
-                        Class = klas,
-                        CourseCode = cursus,
-                        Id = Guid.NewGuid(),
-                        Week = week,
-                        Room = lokaal.RoomId
-                    });
-
-                }
-                var storedClassroom = lokalen.FirstOrDefault(k => k.RoomId == lokaal.RoomId);
-                if (storedClassroom == null)
-                {
-                    lokalen.Add(lokaal);
-                }
-                else
-                {
-                    storedClassroom.Courses = lokaal.Courses;
-                }
-            }
-
-            //If we have two information rules, and the first cell contains two rows, the lesson is a lesson not specifically for a class.
-            if (lessonColumn.ChildNodes[0].ChildNodes.Count == 2 && innerRows == 2)
-            {
-                var data = lessonColumn.ChildNodes[0].ChildNodes;
-                var startBlok = j;
-                var eindBlok = startBlok + int.Parse(lessonColumn.Attributes["rowspan"].Value) / 2 - 1;
-                var klas = data[0].InnerText.Replace(" ", "").Replace(".", "");
-                var cursus = data[1].InnerText.Replace(" ", "");
-
-                if (lokaal.Courses == null)
-                {
-                    lokaal.Courses = new List<Course>();
-                }
-
-                var exists = lokaal.Courses.FirstOrDefault(c =>
-                    c.WeekDay == weekday &&
-                    c.StartBlock == startBlok &&
-                    c.EndBlock == eindBlok &&
-                    c.Week == week);
-
-                if (exists != null)
-                {
-                    lokaal.Courses.Add(exists);
-                }
-                else
-                {
-                    lokaal.Courses.Add(new Course()
-                    {
-                        WeekDay = weekday,
-                        StartBlock = startBlok,
-                        EndBlock = eindBlok,
-                        Class = klas,
-                        CourseCode = cursus,
-                        Id = Guid.NewGuid(),
-                        Week = week,
-                        Room = lokaal.RoomId
-                    });
-                }
-
-                var storedClassroom = lokalen.FirstOrDefault(k => k.RoomId == lokaal.RoomId);
-                if (storedClassroom == null)
-                {
-                    lokalen.Add(lokaal);
-                }
-                else
-                {
-                    storedClassroom.Courses = lokaal.Courses;
-                }
-            }
+            // Subtract 3 days from Thursday to get Monday, which is the first weekday in ISO8601
+            return result.AddDays(-3);
         }
-
-        /// <summary>
-        /// Replace all the unneccesarry newlines in a string
-        /// </summary>
-        /// <param name="doc">HtmlDocument to turn into a new one without newlines</param>
-        /// <returns></returns>
-        public HtmlDocument ReplaceLines(HtmlDocument doc)
-        {
-            var html = doc.ParsedText;
-            var newHtml = html.Replace("\r\n", string.Empty).Replace("\"", "\"");
-
-            var document = new HtmlDocument();
-            document.LoadHtml(newHtml);
-            return document;
-        }
-
     }
+
+
+
 }

@@ -32,5 +32,10 @@ namespace TimeTable2.Repository
             var courses = Context.Set<Course>().Where(c => c.Week == week && c.Class == classCode).ToList();
             return courses;
         }
+
+        public Classroom GetClassroomWithCourses(string roomCode)
+        {
+            return Context.Set<Classroom>().Include(c => c.Courses).FirstOrDefault(c => c.RoomId == roomCode);
+        }
     }
 }

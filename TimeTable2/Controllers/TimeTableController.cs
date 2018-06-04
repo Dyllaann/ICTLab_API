@@ -76,12 +76,13 @@ namespace TimeTable2.Controllers
         [Route("scrape")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<Classroom>))]
         [SwaggerResponse(HttpStatusCode.NotFound, Description = "Scraping unable")]
-        public HttpResponseMessage Scrape(int quarter, int week)
+        public async Task<HttpResponseMessage> Scrape(int quarter, int week)
         {
             var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
-            var repository = new ScraperRepository(context);
-            var scraperService = new ScraperService(repository);
-            var html = scraperService.Scrape(quarter, week);
+            var scraperRepository = new ScraperRepository(context);
+            var classroomRepository = new ClassroomRepository(context);
+            var scraperService = new ScraperService(scraperRepository, classroomRepository);
+            var html = await scraperService.Scrape(quarter, week);
 
             return Request.CreateResponse(HttpStatusCode.OK, html);
         }

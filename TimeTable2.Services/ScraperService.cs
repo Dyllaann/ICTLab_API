@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using TimeTable2.Engine;
 using TimeTable2.Repository.Interfaces;
 using TimeTable2.Scraper;
@@ -8,19 +9,20 @@ namespace TimeTable2.Services
     public class ScraperService
     {
         private IScraperRepository ScraperRepository { get; }
+        private IClassroomRepository ClassroomRepository { get; }
 
-        public ScraperService(IScraperRepository scraperRepository)
+        public ScraperService(IScraperRepository scraperRepository, IClassroomRepository classroomRepository)
         {
             ScraperRepository = scraperRepository;
+            ClassroomRepository = classroomRepository;
         }
 
 
-        public List<Classroom> Scrape(int quarter, int week)
+        public async Task<List<Classroom>> Scrape(int quarter, int week)
         {
             var scraper = new WebScraper();
-            var listofrooms = ScraperRepository.GetAllClassrooms();
 
-            var roomsWithLessons = scraper.Execute(listofrooms, quarter, week);
+            var roomsWithLessons = await scraper.Execute(ClassroomRepository, week);
 
             if (roomsWithLessons == null)
             {

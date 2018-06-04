@@ -12,7 +12,7 @@ namespace TimeTable2.Data.Migrations
             AddColumn("Courses", "Teacher", c => c.String(unicode: false));
             AddColumn("Courses", "CourseCode", c => c.String(unicode: false));
             AddColumn("Courses", "Class", c => c.String(unicode: false));
-            AddColumn("Courses", "Lokaal", c => c.String(unicode: false));
+            AddColumn("Courses", "ScraperClassroom", c => c.String(unicode: false));
             DropColumn("Courses", "startBlok");
             DropColumn("Courses", "EndBlock");
             DropColumn("Courses", "Docent");
@@ -27,7 +27,7 @@ namespace TimeTable2.Data.Migrations
             AddColumn("Courses", "Docent", c => c.String(unicode: false));
             AddColumn("Courses", "EndBlock", c => c.Int(nullable: false));
             AddColumn("Courses", "startBlok", c => c.Int(nullable: false));
-            DropColumn("Courses", "Lokaal");
+            DropColumn("Courses", "ScraperClassroom");
             DropColumn("Courses", "Class");
             DropColumn("Courses", "CourseCode");
             DropColumn("Courses", "Teacher");

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using System.Web.Configuration;
 using Newtonsoft.Json;
@@ -60,13 +61,20 @@ namespace TimeTable2.Services
             if (tokenResponse.Aud == null) return null;
             if (tokenResponse.Aud.Contains(ClientIdIos) || tokenResponse.Aud.Contains(ClientIdAndroid) || tokenResponse.Aud.Contains(ClientIdWeb))
             {
-                //If everything is validated, create the userobject
-                logger.Info($"Logged in!");
-                return new GoogleUserProfile(tokenResponse);
+                var email = Regex.Match(tokenResponse.Email, "@(.*)$");
+                if (email.Success && email.Groups[1].Value == "hr.nl")
+                {
+                    //If everything is okay: login
+                    logger.Info($"Logged in!");
+                    return new GoogleUserProfile(tokenResponse);
+                }
+
+                logger.Info("Not an @hr.nl email address");
+                return null;
             }
 
             //If validation fails, return null
-            logger.Info($"Invalid audience.");
+            logger.Info("Invalid audience.");
             return null;
 
         }
