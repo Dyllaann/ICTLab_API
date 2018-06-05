@@ -38,6 +38,11 @@ namespace TimeTable2.Tests.Resources
             return Classrooms.FirstOrDefault(c => c.RoomId == roomCode);
         }
 
+        public Classroom GetClassroomById(string roomCode)
+        {
+            return Classrooms.FirstOrDefault(c => c.RoomId == roomCode);
+        }
+
         public Classroom AddOrUpdateClassroom(Classroom classroom)
         {
             Classrooms.Remove(classroom);

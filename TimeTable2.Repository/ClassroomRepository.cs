@@ -41,11 +41,21 @@ namespace TimeTable2.Repository
             return Context.Set<Classroom>().Include(c => c.Courses).FirstOrDefault(c => c.RoomId == roomCode);
         }
 
+        public Classroom GetClassroomById(string roomCode)
+        {
+            return Context.Set<Classroom>().FirstOrDefault(c => c.RoomId == roomCode);
+        }
+
         public Classroom AddOrUpdateClassroom(Classroom classroom)
         {
             Context.Set<Classroom>().AddOrUpdate(classroom);
             Context.SaveChanges();
             return classroom;
+        }
+
+        public List<Classroom> GetAllClassroomsWithCourses(int week)
+        {
+            return Context.Set<Classroom>().Include(c => c.Courses).ToList();
         }
     }
 }

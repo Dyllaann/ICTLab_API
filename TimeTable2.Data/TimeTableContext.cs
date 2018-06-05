@@ -1,11 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using log4net;
 using MySql.Data.Entity;
 using TimeTable2.Engine;
+using TimeTable2.Engine.Bookings;
 
 namespace TimeTable2.Data
 {
@@ -14,6 +17,10 @@ namespace TimeTable2.Data
     {
         public TimeTableContext(string dbString) : base(dbString)
         {
+            /*
+            var logger = LogManager.GetLogger("DbContext");
+            Database.Log = x => logger.Info(x);
+            */
         }
 
         public DbSet<User> Users { get; set; }

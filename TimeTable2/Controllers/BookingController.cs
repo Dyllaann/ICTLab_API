@@ -9,6 +9,7 @@ using System.Web.Http;
 using Swashbuckle.Swagger.Annotations;
 using TimeTable2.Data;
 using TimeTable2.Engine;
+using TimeTable2.Engine.Bookings;
 using TimeTable2.Repository;
 using TimeTable2.Services;
 
@@ -21,7 +22,9 @@ namespace TimeTable2.Controllers
         [SwaggerOperation("Book")]
         [Route("Book")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(bool))]
-        [SwaggerResponse(HttpStatusCode.NotFound, Description = "Classroom schedule was not found")]
+        [SwaggerResponse(HttpStatusCode.PreconditionFailed, Description = "'The room was already booked'," +
+                                                                          "'There was a normal lesson during the time you would like to reserve'," +
+                                                                          "'There is maintenance in this classroom during the time you would like to reserve.'")]
         public HttpResponseMessage Book(Booking booking)
         {
             var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
@@ -30,13 +33,20 @@ namespace TimeTable2.Controllers
             var service = new BookingService(bookingRepository, classroomRepository);
 
             booking.Owner = UserId;
-            var bookingService = service.BookRoom(booking);
-            if (bookingService == null)
+            var bookingService = service.BookRoom(booking, UserProfile);
+            switch (bookingService)
             {
-
+                case BookingAvailability.Success:
+                    return Request.CreateResponse(HttpStatusCode.OK, booking);
+                case BookingAvailability.Booked:
+                    return Request.CreateResponse(HttpStatusCode.PreconditionFailed, "The room was already booked");
+                case BookingAvailability.Scheduled:
+                    return Request.CreateResponse(HttpStatusCode.PreconditionFailed, "There was a normal lesson during the time you would like to reserve");
+                case BookingAvailability.Maintenance:
+                    return Request.CreateResponse(HttpStatusCode.PreconditionFailed, "There is maintenance in this classroom during the time you would like to reserve.");
+                default:
+                    return null;
             }
-
-            return Request.CreateResponse(HttpStatusCode.OK, new Booking());
         }
     }
 }

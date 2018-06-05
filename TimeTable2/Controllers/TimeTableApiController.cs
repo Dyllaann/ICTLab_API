@@ -39,6 +39,16 @@ namespace TimeTable2.Controllers
                 {
                     if (header.Scheme == "tt2")
                     {
+                        UserId = "DEBUG";
+                        UserProfile = new GoogleUserProfile
+                        {
+                            UserId = UserId,
+                            Email = "DEBUG",
+                            Name = "DEBUG",
+                            FamilyName = "DEBUG",
+                            GivenName = "DEBUG"
+                        };
+
                         logger.Info($"Logged in with Debug Authentication.");
                         return await base.ExecuteAsync(controllerContext, cancellationToken);
                     }

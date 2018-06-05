@@ -13,7 +13,7 @@ namespace TimeTable2.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201806041831360_InitialMigration"; }
+            get { return "201806051205070_InitialMigration"; }
         }
         
         string IMigrationMetadata.Source

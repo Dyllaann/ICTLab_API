@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Google.Apis.Calendar.v3.Data;
 using TimeTable2.Engine;
 using TimeTable2.Repository;
 using TimeTable2.Repository.Interfaces;
+using TimeTable2.Tools;
 
 namespace TimeTable2.Services
 {
@@ -29,6 +31,55 @@ namespace TimeTable2.Services
         public ICollection<Course> GetClassScheduleByCodeAndWeek(string classCode, int week)
         {
             return ClassroomRepository.GetCoursesByClassAndWeek(classCode, week);
+        }
+
+        public List<Classroom> FindEmpty(int start, int end)
+        {
+            var weekNow = DateTime.Now.DayOfYear / 7 + 1;
+            var allClassrooms = ClassroomRepository.GetAllClassroomsWithCourses(weekNow);
+            var emptyRooms = new List<Classroom>();
+
+            foreach (var room in allClassrooms)
+            {
+                if (room.RoomId == "H.1.315")
+                {
+
+                }
+                var block = CourseAvailability(room.Courses, weekNow, start, end);
+                if(block.Count > 0)
+                {
+                    continue;
+                }
+
+                room.Courses = null;
+                emptyRooms.Add(room);
+            }
+
+            return emptyRooms;
+        }
+
+
+
+
+
+
+
+
+        public List<Course> CourseAvailability(ICollection<Course> existingLessons, int week, int start, int end)
+        {
+            var dayofweek = (int) DateTime.Now.DayOfWeek;
+            var blocking = existingLessons.Where(l => l.Week == week
+                                                      && l.WeekDay == dayofweek
+                                                      //Starts inside another lesson
+                                                      && ( start >= l.StartBlock && start <= end
+                                                      //Ends inside another lesson
+                                                      || end >= l.StartBlock && end <= l.EndBlock
+                                                      //Overlaps entire lesson
+                                                      || start <= l.StartBlock && end >= l.EndBlock))
+                .ToList();
+
+
+            return blocking;
         }
     }
 }

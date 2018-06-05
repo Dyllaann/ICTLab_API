@@ -20,6 +20,8 @@ namespace TimeTable2
             {
                 TelemetryConfiguration.Active.InstrumentationKey = applicationInsights;
             }
+            log4net.Config.XmlConfigurator.Configure();
+
             GlobalConfiguration.Configure(WebApiConfig.Register);
         }
     }

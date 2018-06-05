@@ -23,7 +23,7 @@ namespace TimeTable2.Services
         }
 
 
-        public async Task<List<Classroom>> Scrape(int quarter, int week)
+        public async Task<List<Classroom>> Scrape(int week)
         {
             var scraper = new WebScraper(ClassroomRepository, BookingRepository, ClassRepository, ScraperRepository);
 

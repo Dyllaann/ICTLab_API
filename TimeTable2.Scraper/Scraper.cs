@@ -6,6 +6,7 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Configuration;
+using log4net;
 using Newtonsoft.Json;
 using TimeTable2.Engine;
 using TimeTable2.Engine.Scraper;
@@ -45,15 +46,20 @@ namespace TimeTable2.Scraper
         {
             try
             {
-                var rooms = ClassroomRepository.GetAllClassrooms().ToList();
+                var logger = LogManager.GetLogger("Scraper");
+                var startTimeScrape = DateTime.UtcNow;  
+                logger.Info($"=== Scraper Started at {startTimeScrape} ===");
 
+                var rooms = ClassroomRepository.GetAllClassrooms().ToList();
                 var startDate = TimeConversion.FirstDateOfWeekIso8601(DateTime.Today.Year, week);
                 var endDate = startDate.AddDays(4);
 
                 var secret = WebConfigurationManager.AppSettings["Hint.Api.Secret"];
 
+                logger.Info($"Scraping {rooms.Count} rooms");
                 foreach (var room in rooms)
                 {
+                    logger.Info($"Starting scraping room {room.RoomId} ({rooms.IndexOf(room)}/{rooms.Count}");
                     //Format the request for the HINT API
                     var roomName = room.RoomId;
                     var start = $"{startDate.Year}-{startDate.Month:00}-{startDate.Day:00}";
@@ -74,22 +80,16 @@ namespace TimeTable2.Scraper
                         classroom = JsonConvert.DeserializeObject<ScraperClassroom>(data);
                     }
                     //Should only happen when the lesson is not an array but one lesson
-                    catch (JsonSerializationException)
+                    catch (JsonSerializationException ex)
                     {
-                        try
-                        {
-                            var tempClassroom = JsonConvert.DeserializeObject<ScraperClassroomSingleLesson>(data);
-                            classroom = tempClassroom.ToScraperClassroom();
-                        }
-                        catch (JsonSerializationException ex)
-                        {
-                            continue;
-                        }
+                        logger.Error($"Failed scraping {room.RoomId}", ex);
+                        continue;
                     }
 
                     //Find the classroom that is connected the one being scraped
                     var existingClassroom = ClassroomRepository.GetClassroomWithCourses(classroom.ElementName);
 
+                    logger.Info($"Found {classroom.Lesson.Count} lessons for {room.RoomId}");
                     //For each lesson that is in the classroom from the API
                     foreach (var course in classroom.Lesson)
                     {
@@ -114,6 +114,9 @@ namespace TimeTable2.Scraper
                     }
                 }
 
+                var endTimeScrape = DateTime.UtcNow;
+                logger.Info($"Scraping finished at {endTimeScrape}");
+                logger.Info($"Scraping took {(endTimeScrape-startTimeScrape).TotalSeconds}s");
                 return rooms;
             }
             catch (Exception e)

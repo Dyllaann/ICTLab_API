@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TimeTable2.Engine;
+using TimeTable2.Engine.Bookings;
 using TimeTable2.Services;
 using TimeTable2.Tests.Resources;
 

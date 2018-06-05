@@ -84,6 +84,8 @@
   <ItemGroup>
     <Compile Include="AvailabilityStatus.cs" />
     <Compile Include="Booking.cs" />
+    <Compile Include="Bookings\BookingAvailability.cs" />
+    <Compile Include="Bookings\Filter.cs" />
     <Compile Include="Class.cs" />
     <Compile Include="Classroom.cs" />
     <Compile Include="Course.cs" />

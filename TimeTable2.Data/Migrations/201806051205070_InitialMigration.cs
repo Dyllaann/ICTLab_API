@@ -11,17 +11,17 @@ namespace TimeTable2.Data.Migrations
                 "Bookings",
                 c => new
                     {
-                        Key = c.Guid(nullable: false, identity: true),
+                        Id = c.Guid(nullable: false, identity: true),
                         Week = c.Int(nullable: false),
                         WeekDay = c.Int(nullable: false),
                         StartBlock = c.Int(nullable: false),
                         EndBlock = c.Int(nullable: false),
-                        Guests = c.String(unicode: false),
+                        Guests = c.Int(nullable: false),
                         Classroom = c.String(unicode: false),
                         Owner = c.String(unicode: false),
                         Lokaal_Id = c.Guid(),
                     })
-                .PrimaryKey(t => t.Key)
+                .PrimaryKey(t => t.Id)
                 .ForeignKey("Classrooms", t => t.Lokaal_Id)
                 .Index(t => t.Lokaal_Id);
             
