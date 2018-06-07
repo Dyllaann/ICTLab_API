@@ -48,5 +48,21 @@ namespace TimeTable2.Controllers
                     return null;
             }
         }
+
+        [HttpGet]
+        [SwaggerOperation("Filter")]
+        [Route("Filter")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<FilterClassroom>))]
+        public HttpResponseMessage Filter(int guests, int startBlock, int endBlock, int week, int weekDay)
+        {
+            var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
+            var bookingRepository = new BookingRepository(context);
+            var classroomRepository = new ClassroomRepository(context);
+            var service = new BookingService(bookingRepository, classroomRepository);
+
+            var bookingService = service.Filter(guests, startBlock, endBlock, week, weekDay);
+            return Request.CreateResponse(HttpStatusCode.OK, bookingService);
+
+        }
     }
 }

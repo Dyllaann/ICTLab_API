@@ -22,7 +22,7 @@ namespace TimeTable2.Services
         }
         #endregion
 
-
+        #region Public Methods
         public ICollection<Course> GetClassroomScheduleByCodeAndWeek(string roomCode, int week)
         {
             return ClassroomRepository.GetCoursesByRoomAndWeek(roomCode, week);
@@ -33,7 +33,7 @@ namespace TimeTable2.Services
             return ClassroomRepository.GetCoursesByClassAndWeek(classCode, week);
         }
 
-        public List<Classroom> FindEmpty(int start, int end)
+        public List<Classroom> FindEmpty(int start, int end, int dayofweek)
         {
             var weekNow = DateTime.Now.DayOfYear / 7 + 1;
             var allClassrooms = ClassroomRepository.GetAllClassroomsWithCourses(weekNow);
@@ -41,11 +41,7 @@ namespace TimeTable2.Services
 
             foreach (var room in allClassrooms)
             {
-                if (room.RoomId == "H.1.315")
-                {
-
-                }
-                var block = CourseAvailability(room.Courses, weekNow, start, end);
+                var block = CourseAvailability(room.Courses, weekNow, start, end, dayofweek);
                 if(block.Count > 0)
                 {
                     continue;
@@ -57,17 +53,11 @@ namespace TimeTable2.Services
 
             return emptyRooms;
         }
+        #endregion
 
-
-
-
-
-
-
-
-        public List<Course> CourseAvailability(ICollection<Course> existingLessons, int week, int start, int end)
+        #region Private Methods
+        private List<Course> CourseAvailability(ICollection<Course> existingLessons, int week, int start, int end, int dayofweek)
         {
-            var dayofweek = (int) DateTime.Now.DayOfWeek;
             var blocking = existingLessons.Where(l => l.Week == week
                                                       && l.WeekDay == dayofweek
                                                       //Starts inside another lesson
@@ -81,5 +71,6 @@ namespace TimeTable2.Services
 
             return blocking;
         }
+        #endregion
     }
 }

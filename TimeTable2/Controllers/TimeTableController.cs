@@ -21,13 +21,13 @@ namespace TimeTable2.Controllers
         [SwaggerOperation("Find")]
         [Route("Find")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(bool))]
-        public HttpResponseMessage Find(int start, int end)
+        public HttpResponseMessage Find(int start, int end, int dayofweek)
         {
             var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
             var classroomRepository = new ClassroomRepository(context);
             var service = new TimeTableService(classroomRepository);
                 
-            var emptyRooms = service.FindEmpty(start, end);
+            var emptyRooms = service.FindEmpty(start, end, dayofweek);
             return Request.CreateResponse(HttpStatusCode.OK, emptyRooms);
         }
 
@@ -37,7 +37,7 @@ namespace TimeTable2.Controllers
         [Route("scrape")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<Classroom>))]
         [SwaggerResponse(HttpStatusCode.NotFound, Description = "Scraping unable")]
-        public async Task<HttpResponseMessage> Scrape(int week)
+        public HttpResponseMessage Scrape(int week)
         {
             var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
             var scraperRepository = new ScraperRepository(context);
