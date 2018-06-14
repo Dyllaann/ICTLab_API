@@ -29,6 +29,13 @@ namespace TimeTable2.Tests
                         WeekDay = 1,
                         StartBlock = 2,
                         EndBlock = 5,
+                        Rooms = new List<Classroom>()
+                        {
+                            new Classroom
+                            {
+                                RoomId = "H.1.110"
+                            }
+                        }
                     },
                     new Course()
                     {
@@ -36,10 +43,18 @@ namespace TimeTable2.Tests
                         WeekDay = 1,
                         StartBlock = 7,
                         EndBlock = 9,
+                        Rooms = new List<Classroom>()
+                        {
+                            new Classroom
+                            {
+                                RoomId = "H.1.110"
+                            }
+                        }
                     }
                 }
             };
-            var bookingRepository = new TestBookingRepository();
+            var bookings = new List<Booking>();
+            var bookingRepository = new TestBookingRepository(bookings);
 
             var service = new BookingService(bookingRepository, classroomRepository);
             var existingLessons = classroomRepository.GetCoursesByRoomAndWeek("H.1.110", 1);

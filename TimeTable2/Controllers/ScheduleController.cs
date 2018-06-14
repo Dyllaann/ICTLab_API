@@ -47,5 +47,37 @@ namespace TimeTable2.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, room);
         }
 
+        [HttpGet]
+        [SwaggerOperation("MyBookings/{week}")]
+        [Route("MyBookings/{week}")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<Booking>))]
+        public HttpResponseMessage GetBookingsForUser(int week)
+        {
+            var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
+            var classroomRepository = new ClassroomRepository(context);
+            var bookingRepository = new BookingRepository(context);
+            var service = new BookingService(bookingRepository, classroomRepository);
+
+            var bookings = service.GetBookingsForUser(week, UserId);
+
+            return Request.CreateResponse(HttpStatusCode.OK, bookings);
+        }
+
+        [HttpGet]
+        [SwaggerOperation("AvailableWeeks")]
+        [Route("AvailableWeeks")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<int>))]
+        [SwaggerResponse(HttpStatusCode.NotFound, Description = "No available weeks found")]
+        public HttpResponseMessage GetAvailableWeeksHttpResponseMessage()
+        {
+            var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
+            var repository = new ClassroomRepository(context);
+            var service = new TimeTableService(repository);
+
+            var weeks = service.GetAvailableWeeks();
+
+            return Request.CreateResponse(HttpStatusCode.OK, weeks);
+        }
+
     }
 }

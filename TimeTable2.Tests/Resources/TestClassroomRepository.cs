@@ -23,7 +23,7 @@ namespace TimeTable2.Tests.Resources
 
         public ICollection<Course> GetCoursesByRoomAndWeek(string roomCode, int week)
         {
-            var courses = Courses.Where(c => c.Week == week && c.Rooms.Contains(c.Rooms.FirstOrDefault(r => r.RoomId == roomCode))).ToList();
+            var courses = Courses.Where(c => c.Week == week && c.Rooms != null && c.Rooms.Contains(c.Rooms.FirstOrDefault(r => r.RoomId == roomCode))).ToList();
             return courses;
         }
 
@@ -48,6 +48,26 @@ namespace TimeTable2.Tests.Resources
             Classrooms.Remove(classroom);
             Classrooms.Add(classroom);
             return classroom;
+        }
+
+        public List<Classroom> GetAllClassroomsWithCourses(int week)
+        {
+            return Classrooms;
+        }
+
+        public List<Classroom> GetAllClassroomsWithCoursesRemoveEmpty(int week)
+        {
+            return Classrooms;
+        }
+
+        public List<Classroom> GetAllClassroomsWithBookingsRemoveEmpty(int week)
+        {
+            return Classrooms;
+        }
+
+        public List<int> GetAvailableWeeks()
+        {
+            return Courses.OrderByDescending(course => course.Week).Select(c => c.Week).Distinct().ToList();
         }
     }
 }

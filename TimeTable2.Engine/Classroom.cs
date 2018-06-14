@@ -25,5 +25,7 @@ namespace TimeTable2.Engine
 
         [JsonIgnore]
         public List<Course> Courses { get; set; }
+        [JsonIgnore]
+        public List<Booking> Bookings { get; set; }
     }
 }

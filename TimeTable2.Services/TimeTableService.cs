@@ -53,6 +53,11 @@ namespace TimeTable2.Services
 
             return emptyRooms;
         }
+
+        public List<int> GetAvailableWeeks()
+        {
+            return ClassroomRepository.GetAvailableWeeks();
+        }
         #endregion
 
         #region Private Methods

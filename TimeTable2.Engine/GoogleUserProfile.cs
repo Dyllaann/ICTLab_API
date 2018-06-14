@@ -14,25 +14,13 @@ namespace TimeTable2.Engine
         {
         }
 
-        public GoogleUserProfile(string userId, string email, bool emailVerified, string name, string picture, string givenName, string familyName, string locale)
-        {
-            UserId = userId;
-            Email = email;
-            EmailVerified = emailVerified;
-            Name = name;
-            Picture = picture;
-            GivenName = givenName;
-            FamilyName = familyName;
-            Locale = locale;
-        }
-
         public GoogleUserProfile(TokenResponse response)
         {
             Email = response.Email;
             EmailVerified = response.EmailVerified;
-            Name = response.Name;
+            Name = response.GivenName;
             FamilyName = response.FamilyName;
-            GivenName = response.GivenName;
+            GivenName = response.Name;
             Locale = response.Locale;
             Picture = response.Picture;
             UserId = response.Sub;
@@ -60,6 +48,6 @@ namespace TimeTable2.Engine
 
         [JsonProperty("locale")]
         public string Locale { get; set; }
-        
+
     }
 }

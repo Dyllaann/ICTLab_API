@@ -58,6 +58,11 @@ namespace TimeTable2.Services
             return Engine.Bookings.BookingAvailability.Success;
         }
 
+        public List<Booking> GetBookingsForUser(int week, string owner)
+        {
+            return BookingRepository.GetBookingFromUserByWeek(week, owner);
+        }
+
         public List<FilterClassroom> Filter(int guests, int startBlock, int endBlock, int week, int weekDay)
         {
             var filteredRooms = new List<FilterClassroom>();
@@ -65,10 +70,6 @@ namespace TimeTable2.Services
             var allRooms = ClassroomRepository.GetAllClassroomsWithCourses(week);
             foreach (var room in allRooms)
             {
-                if (room.RoomId == "H.1.315")
-                {
-
-                }
                 var block = CourseAvailability(room.Courses, week, startBlock, endBlock, weekDay);
                 if (block.Count > 0)
                 {
@@ -87,10 +88,24 @@ namespace TimeTable2.Services
             return filteredRooms;
         }
 
+        public bool DeleteBooking(Guid bookingId)
+        {
+            var logger = LogManager.GetLogger("BookingService");
+
+            var booking = BookingRepository.GetBookingById(bookingId);
+            if (booking == null)
+            {
+                logger.Warn($"No booking found for bookingId {bookingId}");
+                return false;
+            }
+            BookingRepository.DeleteBooking(booking);
+            return true;
+        }
+
         #endregion
 
         #region Private Methods
-        private List<Course> CourseAvailability(ICollection<Course> existingLessons, Booking booking)
+        public List<Course> CourseAvailability(ICollection<Course> existingLessons, Booking booking)
         {
             var blocking = existingLessons.Where(l => l.WeekDay == booking.WeekDay 
                                                       //Starts inside another lesson
@@ -105,7 +120,7 @@ namespace TimeTable2.Services
             return blocking;
         }
             
-        private List<Booking> BookingAvailability(ICollection<Booking> existingLessons, Booking booking)
+        public List<Booking> BookingAvailability(ICollection<Booking> existingLessons, Booking booking)
         {
             var blocking = existingLessons.Where(l => l.WeekDay == booking.WeekDay
                                                       //Starts inside another lesson
@@ -120,7 +135,7 @@ namespace TimeTable2.Services
             return blocking;
         }
 
-        private List<Course> CourseAvailability(ICollection<Course> existingLessons, int week, int start, int end, int dayofweek)
+        public List<Course> CourseAvailability(ICollection<Course> existingLessons, int week, int start, int end, int dayofweek)
         {
             var blocking = existingLessons.Where(l => l.Week == week
                                                       && l.WeekDay == dayofweek

@@ -19,6 +19,9 @@ namespace TimeTable2.Repository.Interfaces
 
 
         Classroom AddOrUpdateClassroom(Classroom classroom);
-        List<Classroom> GetAllClassroomsWithCourses(int week);
+        List<Classroom> GetAllClassroomsWithCourses(int week);  
+        List<Classroom> GetAllClassroomsWithCoursesRemoveEmpty(int week);
+        List<Classroom> GetAllClassroomsWithBookingsRemoveEmpty(int week);
+        List<int> GetAvailableWeeks();
     }
 }

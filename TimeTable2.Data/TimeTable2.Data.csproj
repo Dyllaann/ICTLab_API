@@ -70,6 +70,14 @@
     <Compile Include="Migrations\201806051205070_InitialMigration.Designer.cs">
       <DependentUpon>201806051205070_InitialMigration.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201806111048576_UserManagement.cs" />
+    <Compile Include="Migrations\201806111048576_UserManagement.Designer.cs">
+      <DependentUpon>201806111048576_UserManagement.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201806140841232_BookingType.cs" />
+    <Compile Include="Migrations\201806140841232_BookingType.Designer.cs">
+      <DependentUpon>201806140841232_BookingType.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="TimeTableContext.cs" />
@@ -87,6 +95,12 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201806051205070_InitialMigration.resx">
       <DependentUpon>201806051205070_InitialMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806111048576_UserManagement.resx">
+      <DependentUpon>201806111048576_UserManagement.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201806140841232_BookingType.resx">
+      <DependentUpon>201806140841232_BookingType.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

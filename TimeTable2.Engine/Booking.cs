@@ -16,10 +16,25 @@ namespace TimeTable2.Engine
         public int Guests { get; set; }
         public string Classroom { get; set; }
 
+        public BookingType Type { get; set; }
+
 
         [JsonIgnore]
         public string Owner { get; set; }
         [JsonIgnore]
         public Classroom Lokaal { get; set; }
+
+        [JsonIgnore]
+        public string TypeString
+        {
+            get => Type.ToString();
+            private set => value.ParseEnum<BookingType>();
+        }
+    }
+
+    public enum BookingType
+    {
+        Normal = 0,
+        Maintenance = 1
     }
 }

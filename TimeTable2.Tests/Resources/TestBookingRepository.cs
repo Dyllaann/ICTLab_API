@@ -11,14 +11,43 @@ namespace TimeTable2.Tests.Resources
 {
     public class TestBookingRepository : IBookingRepository
     {
+        private List<Booking> Bookings { get; set; }
+        public TestBookingRepository(List<Booking> bookings)
+        {
+            Bookings = bookings;
+        }
+
+
+
         public List<Booking> GetBookingsByRoomAndWeek(string room, int week)
         {
-            throw new NotImplementedException();
+            return Bookings.Where(b => b.Week == week && b.Classroom == room).ToList();
         }
 
         public Booking CreateBooking(Booking booking)
         {
-            throw new NotImplementedException();
+            Bookings.Add(booking);
+            return booking;
+        }
+
+        public void DeleteBooking(Booking booking)
+        {
+            Bookings.Remove(booking);
+        }
+
+        public List<Booking> GetAllBookings()
+        {
+            return Bookings;
+        }
+
+        public List<Booking> GetBookingFromUserByWeek(int week, string owner)
+        {
+            return Bookings.Where(b => b.Week == week && b.Owner == owner).ToList();
+        }
+
+        public Booking GetBookingById(Guid id)
+        {
+            return Bookings.FirstOrDefault(b => b.Id == id);
         }
     }
 }

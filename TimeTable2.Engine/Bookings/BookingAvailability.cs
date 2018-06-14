@@ -4,7 +4,8 @@
     {
         Success = 0,
         Scheduled = 1,
-        Booked = 2,
-        Maintenance = 3
+        Booked = 2, 
+        Maintenance = 3,
+        Error = 4
     }
 }

@@ -50,5 +50,14 @@ namespace TimeTable2.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK);
         }
+
+        [HttpGet]
+        [SwaggerOperation("Health")]
+        [Route("Health")]
+        [SwaggerResponse(HttpStatusCode.OK)]
+        public HttpResponseMessage Health()
+        {
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
     }
 }

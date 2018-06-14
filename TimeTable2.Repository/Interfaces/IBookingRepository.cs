@@ -12,5 +12,9 @@ namespace TimeTable2.Repository.Interfaces
     {
         List<Booking> GetBookingsByRoomAndWeek(string room, int week);
         Booking CreateBooking(Booking booking);
+        void DeleteBooking(Booking booking);
+        List<Booking> GetAllBookings();
+        List<Booking> GetBookingFromUserByWeek(int week, string owner);
+        Booking GetBookingById(Guid id);
     }
 }

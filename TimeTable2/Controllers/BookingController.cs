@@ -51,7 +51,7 @@ namespace TimeTable2.Controllers
 
         [HttpGet]
         [SwaggerOperation("Filter")]
-        [Route("Filter")]
+        [Route("Filter/{guests}/{startBlock}/{endBlock}/{week}/{weekDay}")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<FilterClassroom>))]
         public HttpResponseMessage Filter(int guests, int startBlock, int endBlock, int week, int weekDay)
         {

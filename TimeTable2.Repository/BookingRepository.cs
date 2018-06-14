@@ -29,5 +29,26 @@ namespace TimeTable2.Repository
             Context.SaveChanges();
             return booking;
         }
+
+        public void DeleteBooking(Booking booking)
+        {
+            Context.Set<Booking>().Remove(booking);
+            Context.SaveChanges();
+        }
+
+        public List<Booking> GetAllBookings()
+        {
+            return Context.Set<Booking>().ToList();
+        }
+
+        public List<Booking> GetBookingFromUserByWeek(int week, string owner)
+        {
+            return Context.Set<Booking>().Where(b => b.Week == week && b.Owner == owner).ToList();
+        }
+
+        public Booking GetBookingById(Guid id)
+        {
+            return Context.Set<Booking>().FirstOrDefault(b => b.Id == id);
+        }
     }
 }

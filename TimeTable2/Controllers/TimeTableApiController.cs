@@ -109,6 +109,13 @@ namespace TimeTable2.Controllers
             if (piRegex.Success)
             {
                 UserId = piRegex.Groups[3].Value;
+                UserProfile = new GoogleUserProfile
+                {
+                    UserId = UserId,
+                    Name = "Pi",
+                    FamilyName = piRegex.Groups[3].Value,
+                    GivenName = $"Pi {piRegex.Groups[3].Value}"
+                };
             }
 
             return false;
