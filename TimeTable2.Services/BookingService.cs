@@ -39,7 +39,6 @@ namespace TimeTable2.Services
                 return Engine.Bookings.BookingAvailability.Scheduled;
             }
 
-
             var existingBookings = BookingRepository.GetBookingsByRoomAndWeek(booking.Classroom, booking.Week);
             var blockingBookings = BookingAvailability(existingBookings, booking);
             logger.Info($"Booking: There are {blockingBookings.Count} blocking bookings");
@@ -67,14 +66,21 @@ namespace TimeTable2.Services
         {
             var filteredRooms = new List<FilterClassroom>();
 
-            var allRooms = ClassroomRepository.GetAllClassroomsWithCourses(week);
+            var allRooms = ClassroomRepository.GetAllClassroomsWithCoursesAndBookings(week);
             foreach (var room in allRooms)
             {
-                var block = CourseAvailability(room.Courses, week, startBlock, endBlock, weekDay);
-                if (block.Count > 0)
+                var blockingLessons = CourseAvailability(room.Courses, week, startBlock, endBlock, weekDay);
+                if (blockingLessons.Count > 0)
                 {
                     continue;
                 }
+
+                var blockingBookings = BookingAvailability(room.Bookings, week, startBlock, endBlock, weekDay);
+                if (blockingBookings.Count > 0)
+                {
+                    continue;
+                }
+
 
                 var classroom = new FilterClassroom(room);
 
@@ -100,6 +106,21 @@ namespace TimeTable2.Services
             }
             BookingRepository.DeleteBooking(booking);
             return true;
+        }
+
+        public List<Booking> GetAllMaintenanceBookings(int week)
+        {
+            return BookingRepository.GetAllMaintenanceBookings(week);
+        }
+
+        public List<Booking> GetAllMaintenanceBookings()
+        {
+            return BookingRepository.GetAllMaintenanceBookings();
+        }
+
+        public List<Booking> GetBookingsPerRoomPerWeek(string roomCode, int week)
+        {
+            return BookingRepository.GetBookingsPerRoomPerWeek(roomCode, week);
         }
 
         #endregion
@@ -140,7 +161,23 @@ namespace TimeTable2.Services
             var blocking = existingLessons.Where(l => l.Week == week
                                                       && l.WeekDay == dayofweek
                                                       //Starts inside another lesson
-                                                      && (start >= l.StartBlock && start <= end
+                                                      && (start >= l.StartBlock && start <= l.EndBlock
+                                                          //Ends inside another lesson
+                                                          || end >= l.StartBlock && end <= l.EndBlock
+                                                          //Overlaps entire lesson
+                                                          || start <= l.StartBlock && end >= l.EndBlock))
+                .ToList();
+
+
+            return blocking;
+        }
+
+        public List<Booking> BookingAvailability(ICollection<Booking> existingBookings, int week, int start, int end, int dayofweek)
+        {
+            var blocking = existingBookings.Where(l => l.Week == week
+                                                      && l.WeekDay == dayofweek
+                                                      //Starts inside another lesson
+                                                      && (start >= l.StartBlock && start <= l.EndBlock
                                                           //Ends inside another lesson
                                                           || end >= l.StartBlock && end <= l.EndBlock
                                                           //Overlaps entire lesson

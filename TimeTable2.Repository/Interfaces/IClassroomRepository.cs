@@ -16,12 +16,13 @@ namespace TimeTable2.Repository.Interfaces
         ICollection<Course> GetCoursesByClassAndWeek(string classCode, int week);
         Classroom GetClassroomWithCourses(string roomCode);
         Classroom GetClassroomById(string roomCode);
+        List<int> GetAvailableWeeks();
 
 
         Classroom AddOrUpdateClassroom(Classroom classroom);
         List<Classroom> GetAllClassroomsWithCourses(int week);  
         List<Classroom> GetAllClassroomsWithCoursesRemoveEmpty(int week);
         List<Classroom> GetAllClassroomsWithBookingsRemoveEmpty(int week);
-        List<int> GetAvailableWeeks();
+        List<Classroom> GetAllClassroomsWithCoursesAndBookings(int week);
     }
 }

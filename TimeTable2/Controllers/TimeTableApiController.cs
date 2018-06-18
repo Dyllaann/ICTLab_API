@@ -116,6 +116,7 @@ namespace TimeTable2.Controllers
                     FamilyName = piRegex.Groups[3].Value,
                     GivenName = $"Pi {piRegex.Groups[3].Value}"
                 };
+                return true;
             }
 
             return false;

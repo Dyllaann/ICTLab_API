@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using log4net;
 using TimeTable2.Engine;
 using TimeTable2.Engine.Bookings;
+using TimeTable2.Engine.Management;
 using TimeTable2.Repository.Interfaces;
 
 namespace TimeTable2.Services
@@ -20,6 +21,16 @@ namespace TimeTable2.Services
         #endregion
 
         #region Public POST methods
+
+        public bool EditUser(IUserRepository repository, UserEdit newUser)
+        {
+            var existingUser = repository.GetUserById(newUser.UserId);
+            if (existingUser == null) return true;
+
+            existingUser.Role = newUser.NewRole;
+            repository.UpdateUser(existingUser);
+            return true;
+        }
         public BookingAvailability MaintenanceBooking(IClassroomRepository classroomRepository, IBookingRepository bookingRepository, IUserRepository userRepository,
             BookingService bookingService, Booking booking, string userId)
         {   

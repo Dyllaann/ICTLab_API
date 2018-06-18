@@ -16,5 +16,8 @@ namespace TimeTable2.Repository.Interfaces
         List<Booking> GetAllBookings();
         List<Booking> GetBookingFromUserByWeek(int week, string owner);
         Booking GetBookingById(Guid id);
+        List<Booking> GetAllMaintenanceBookings(int week);
+        List<Booking> GetAllMaintenanceBookings();
+        List<Booking> GetBookingsPerRoomPerWeek(string roomCode, int week);
     }
 }

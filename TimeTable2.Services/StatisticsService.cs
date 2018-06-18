@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TimeTable2.Engine;
 using TimeTable2.Engine.Statistics;
+using TimeTable2.Repository;
 using TimeTable2.Repository.Interfaces;
 
 namespace TimeTable2.Services
@@ -34,6 +35,27 @@ namespace TimeTable2.Services
                 Top = orderedRooms.IndexOf(s),
                 AmountOfLessons = s.Bookings.Count,
             }).ToList();
+            return statistics;
+        }
+                
+        public int AmountOfMaintenanceBookings(IBookingRepository bookingRepository, int week)
+        {
+            var allRooms = bookingRepository.GetAllMaintenanceBookings(week);
+            var statistics = allRooms.Count;
+            return statistics;
+        }
+
+        public int AmountOfUsers(IUserRepository repository)
+        {
+            var allusers = repository.GetAllUsers();
+            var statistics = allusers.Count;
+            return statistics;
+        }
+
+        public int AmountOfBookings(IBookingRepository repository)
+        {
+            var allBookings = repository.GetAllBookings();
+            var statistics = allBookings.Count;
             return statistics;
         }
     }

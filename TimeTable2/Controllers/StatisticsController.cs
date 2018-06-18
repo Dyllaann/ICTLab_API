@@ -17,7 +17,8 @@ namespace TimeTable2.Controllers
 {
     [RoutePrefix("api/Statistics")]
     public class StatisticsController : TimeTableApiController
-    {
+    {   
+        #region MostUsedClassroom
         [HttpGet]
         [SwaggerOperation("MostUsedClassroomsLessons/{week}/{top}")]
         [Route("MostUsedClassroomsLessons/{week}/{top}")]
@@ -61,5 +62,77 @@ namespace TimeTable2.Controllers
 
             return Request.CreateResponse(HttpStatusCode.OK, rooms);
         }
+        #endregion
+
+        #region AmountOfBookings
+        [HttpGet]
+        [SwaggerOperation("AmountOfMaintenanceBookings/{week}/{top}")]
+        [Route("AmountOfMaintenanceBookings/{week}/{top}")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(int))]
+        public HttpResponseMessage AmountOfMaintenanceBookings(int week)
+        {
+            var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
+            var userRepository = new UserRepository(context);
+            var userService = new UserService(userRepository);
+
+            var user = userService.GetUserById(UserId);
+            if (user.Role != TimeTableRole.Management)
+                return Request.CreateResponse(HttpStatusCode.Unauthorized, "Insufficient permissions.");
+
+            var repository = new BookingRepository(context);
+            var service = new StatisticsService();
+
+            var amount = service.AmountOfMaintenanceBookings(repository, week);
+
+            return Request.CreateResponse(HttpStatusCode.OK, amount);
+        }
+
+        [HttpGet]
+        [SwaggerOperation("AmountOfBookings")]
+        [Route("AmountOfBookings")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(int))]
+        public HttpResponseMessage AmountOfBookings()
+        {
+            var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
+            var userRepository = new UserRepository(context);
+            var userService = new UserService(userRepository);
+
+            var user = userService.GetUserById(UserId);
+            if (user.Role != TimeTableRole.Management)
+                return Request.CreateResponse(HttpStatusCode.Unauthorized, "Insufficient permissions.");
+
+            var repository = new BookingRepository(context);
+            var service = new StatisticsService();
+
+            var amount = service.AmountOfBookings(repository);
+
+            return Request.CreateResponse(HttpStatusCode.OK, amount);
+        }
+        #endregion
+
+        #region AmountOfUsers
+        [HttpGet]
+        [SwaggerOperation("AmountOfUsers")]
+        [Route("AmountOfUsers")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(int))]
+        public HttpResponseMessage AmountOfUsers(int top, int week)
+        {
+            var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
+            var userRepository = new UserRepository(context);
+            var userService = new UserService(userRepository);
+
+            var user = userService.GetUserById(UserId);
+            if (user.Role != TimeTableRole.Management)
+                return Request.CreateResponse(HttpStatusCode.Unauthorized, "Insufficient permissions.");
+
+            var repository = new UserRepository(context);
+            var service = new StatisticsService();
+
+            var amount = service.AmountOfUsers(repository);
+
+            return Request.CreateResponse(HttpStatusCode.OK, amount);
+        }
+        #endregion
+
     }
 }

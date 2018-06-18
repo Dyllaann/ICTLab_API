@@ -59,5 +59,16 @@ namespace TimeTable2.Controllers
         {
             return Request.CreateResponse(HttpStatusCode.OK);
         }
+
+        [HttpGet]
+        [SwaggerOperation("Notify")]
+        [Route("Notify")]
+        [SwaggerResponse(HttpStatusCode.OK)]
+        public async Task<HttpResponseMessage> TestNotifcation()
+        {
+            var notifier = new Notifier.Notifier();
+            await notifier.Notify("testUser", "Oi!", "hello matey", "API");
+            return Request.CreateResponse(HttpStatusCode.OK);
+        }
     }
 }

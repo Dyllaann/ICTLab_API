@@ -49,5 +49,20 @@ namespace TimeTable2.Tests.Resources
         {
             return Bookings.FirstOrDefault(b => b.Id == id);
         }
+
+        public List<Booking> GetAllMaintenanceBookings(int week)
+        {
+            return Bookings.Where(b => b.Type == BookingType.Maintenance && b.Week == week).ToList();
+        }
+
+        public List<Booking> GetAllMaintenanceBookings()
+        {
+            return Bookings.Where(b => b.Type == BookingType.Maintenance).ToList();
+        }
+
+        public List<Booking> GetBookingsPerRoomPerWeek(string roomCode, int week)
+        {
+            return Bookings.Where(b => b.Type == BookingType.Maintenance && b.Week == week).ToList();
+        }
     }
 }

@@ -50,5 +50,20 @@ namespace TimeTable2.Repository
         {
             return Context.Set<Booking>().FirstOrDefault(b => b.Id == id);
         }
+
+        public List<Booking> GetAllMaintenanceBookings(int week)
+        {
+            return Context.Set<Booking>().Where(b => b.Type == BookingType.Maintenance && b.Week == week).ToList();
+        }
+
+        public List<Booking> GetAllMaintenanceBookings()
+        {
+            return Context.Set<Booking>().Where(b => b.Type == BookingType.Maintenance).ToList();
+        }
+
+        public List<Booking> GetBookingsPerRoomPerWeek(string roomCode, int week)
+        {
+            return Context.Set<Booking>().Where(b => b.Classroom == roomCode && b.Week == week).ToList();
+        }
     }
 }

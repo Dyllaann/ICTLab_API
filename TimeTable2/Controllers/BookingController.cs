@@ -64,5 +64,21 @@ namespace TimeTable2.Controllers
             return Request.CreateResponse(HttpStatusCode.OK, bookingService);
 
         }
+
+        [HttpGet]
+        [SwaggerOperation("Filter")]
+        [Route("Bookings/{roomCode}/{week}")]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<FilterClassroom>))]
+        public HttpResponseMessage GetBookingsPerRoomPerWeek(string roomCode, int week)
+        {
+            var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
+            var bookingRepository = new BookingRepository(context);
+            var classroomRepository = new ClassroomRepository(context);
+            var service = new BookingService(bookingRepository, classroomRepository);
+
+            var bookings = service.GetBookingsPerRoomPerWeek(roomCode, week);
+            return Request.CreateResponse(HttpStatusCode.OK, bookings);
+
+        }
     }
 }

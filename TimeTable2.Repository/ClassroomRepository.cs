@@ -45,6 +45,12 @@ namespace TimeTable2.Repository
         {
             return Context.Set<Classroom>().FirstOrDefault(c => c.RoomId == roomCode);
         }
+        public List<int> GetAvailableWeeks()
+        {
+            return Context.Set<Course>().Select(c => c.Week).Distinct().ToList();
+        }
+
+
 
         public Classroom AddOrUpdateClassroom(Classroom classroom)
         {
@@ -103,9 +109,21 @@ namespace TimeTable2.Repository
             return classroomsWithBookings;
         }
 
-        public List<int> GetAvailableWeeks()
+        public List<Classroom> GetAllClassroomsWithCoursesAndBookings(int week)
         {
-            return Context.Set<Course>().Select(c => c.Week).Distinct().ToList();
+            var classrooms = GetAllClassrooms();
+            foreach (var classroom in classrooms)
+            {
+                var courses = Context.Set<Course>().Where(c => c.Rooms.Select(r => r.RoomId).Contains(classroom.RoomId) && c.Week == week).ToList();
+                classroom.Courses = courses;
+
+                var bookings = Context.Set<Booking>().Where(b => b.Classroom == classroom.RoomId).ToList();
+                classroom.Bookings = bookings;
+            }
+
+            return classrooms.ToList();
         }
+
+
     }
 }

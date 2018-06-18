@@ -65,6 +65,11 @@ namespace TimeTable2.Tests.Resources
             return Classrooms;
         }
 
+        public List<Classroom> GetAllClassroomsWithCoursesAndBookings(int week)
+        {
+            return Classrooms;
+        }
+
         public List<int> GetAvailableWeeks()
         {
             return Courses.OrderByDescending(course => course.Week).Select(c => c.Week).Distinct().ToList();
