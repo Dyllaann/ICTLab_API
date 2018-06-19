@@ -115,7 +115,7 @@ namespace TimeTable2.Controllers
         [SwaggerOperation("AmountOfUsers")]
         [Route("AmountOfUsers")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(int))]
-        public HttpResponseMessage AmountOfUsers(int top, int week)
+        public HttpResponseMessage AmountOfUsers()
         {
             var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
             var userRepository = new UserRepository(context);
