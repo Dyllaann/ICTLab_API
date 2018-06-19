@@ -30,7 +30,7 @@ namespace TimeTable2.Controllers
             var userService = new UserService(userRepository);
 
             var user = userService.GetUserById(UserId);
-            if (user.Role != TimeTableRole.Management)
+            if (user.Role != TimeTableRole.Management && user.Role != TimeTableRole.Admin && user.Role != TimeTableRole.Fit)
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, "Insufficient permissions.");
 
             var repository = new ClassroomRepository(context);
@@ -52,7 +52,7 @@ namespace TimeTable2.Controllers
             var userService = new UserService(userRepository);
 
             var user = userService.GetUserById(UserId);
-            if (user.Role != TimeTableRole.Management)
+            if (user.Role != TimeTableRole.Management && user.Role != TimeTableRole.Admin && user.Role != TimeTableRole.Fit)
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, "Insufficient permissions.");
 
             var repository = new ClassroomRepository(context);
@@ -76,7 +76,7 @@ namespace TimeTable2.Controllers
             var userService = new UserService(userRepository);
 
             var user = userService.GetUserById(UserId);
-            if (user.Role != TimeTableRole.Management)
+            if (user.Role != TimeTableRole.Management && user.Role != TimeTableRole.Admin && user.Role != TimeTableRole.Fit)
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, "Insufficient permissions.");
 
             var repository = new BookingRepository(context);
@@ -98,7 +98,7 @@ namespace TimeTable2.Controllers
             var userService = new UserService(userRepository);
 
             var user = userService.GetUserById(UserId);
-            if (user.Role != TimeTableRole.Management)
+            if (user.Role != TimeTableRole.Management && user.Role != TimeTableRole.Admin && user.Role != TimeTableRole.Fit)
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, "Insufficient permissions.");
 
             var repository = new BookingRepository(context);
@@ -122,7 +122,7 @@ namespace TimeTable2.Controllers
             var userService = new UserService(userRepository);
 
             var user = userService.GetUserById(UserId);
-            if (user.Role != TimeTableRole.Management)
+            if (user.Role != TimeTableRole.Management && user.Role != TimeTableRole.Admin && user.Role != TimeTableRole.Fit)
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, "Insufficient permissions.");
 
             var repository = new UserRepository(context);

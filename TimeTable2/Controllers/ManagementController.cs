@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web;
 using System.Web.Configuration;
 using System.Web.Http;
@@ -31,7 +32,7 @@ namespace TimeTable2.Controllers
             var userService = new UserService(repository);
 
             var user = userService.GetUserById(UserId);
-            if (user.Role != TimeTableRole.Management)
+            if (user.Role != TimeTableRole.Management && user.Role != TimeTableRole.Admin)
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, "Insufficient permissions.");
 
             var allUsers = managementService.GetAllUsers(repository);
@@ -50,7 +51,7 @@ namespace TimeTable2.Controllers
             var userService = new UserService(repository);
 
             var user = userService.GetUserById(UserId);
-            if (user.Role != TimeTableRole.Management)
+            if (user.Role != TimeTableRole.Management && user.Role != TimeTableRole.Admin && user.Role != TimeTableRole.Fit)
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, "Insufficient permissions.");
 
             var bookingRepository = new BookingRepository(context);
@@ -73,7 +74,7 @@ namespace TimeTable2.Controllers
             var userService = new UserService(repository);
 
             var user = userService.GetUserById(UserId);
-            if (user.Role != TimeTableRole.Management)
+            if (user.Role != TimeTableRole.Management && user.Role != TimeTableRole.Admin && user.Role != TimeTableRole.Fit)
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, "Insufficient permissions.");
 
             var bookingRepository = new BookingRepository(context);
@@ -89,7 +90,7 @@ namespace TimeTable2.Controllers
         [Route("Book")]
         [SwaggerResponse(HttpStatusCode.OK)]
         [SwaggerResponse(HttpStatusCode.Unauthorized)]
-        public HttpResponseMessage BookMaintenance(Booking booking)
+        public async Task<HttpResponseMessage> BookMaintenance(Booking booking)
         {
             var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
             var userRepository = new UserRepository(context);
@@ -101,10 +102,11 @@ namespace TimeTable2.Controllers
             var userService = new UserService(userRepository);
 
             var user = userService.GetUserById(UserId);
-            if (user.Role != TimeTableRole.Management)
+            if (user.Role != TimeTableRole.Management && user.Role != TimeTableRole.Admin && user.Role != TimeTableRole.Fit)
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, "Insufficient permissions.");
 
-            var allUsers = managementService.MaintenanceBooking(classroomRepository, bookingRepository, userRepository, bookingService, booking, UserId);
+            var notifier = new Notifier.Notifier();
+            var allUsers = await managementService.MaintenanceBooking(classroomRepository, bookingRepository, userRepository, bookingService, booking, UserId, notifier);
             return Request.CreateResponse(HttpStatusCode.OK, allUsers);
         }
 
@@ -121,6 +123,12 @@ namespace TimeTable2.Controllers
                 return Request.CreateResponse(HttpStatusCode.PreconditionFailed, "You can't edit yourself");
             }
 
+            var isDefined = Enum.IsDefined(typeof(TimeTableRole), edit.NewRole);
+            if (!isDefined)
+            {
+                return Request.CreateResponse(HttpStatusCode.PreconditionFailed, "New role is not a valid one");
+            }
+
             var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);
             var userRepository = new UserRepository(context);
 
@@ -128,12 +136,12 @@ namespace TimeTable2.Controllers
             var userService = new UserService(userRepository);
 
             var user = userService.GetUserById(UserId);
-            if (user.Role != TimeTableRole.Management)
+            if (user.Role != TimeTableRole.Admin)
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, "Insufficient permissions.");
 
             var isUserEdited = managementService.EditUser(userRepository, edit);
-            return isUserEdited 
-                ? Request.CreateResponse(HttpStatusCode.OK) 
+            return isUserEdited
+                ? Request.CreateResponse(HttpStatusCode.OK)
                 : Request.CreateResponse(HttpStatusCode.BadRequest);
 
         }
@@ -155,7 +163,7 @@ namespace TimeTable2.Controllers
             var userService = new UserService(userRepository);
 
             var user = userService.GetUserById(UserId);
-            if (user.Role != TimeTableRole.Management)
+            if (user.Role != TimeTableRole.Management && user.Role != TimeTableRole.Admin && user.Role != TimeTableRole.Fit)
                 return Request.CreateResponse(HttpStatusCode.Unauthorized, "Insufficient permissions.");
 
             var deletedBooking = bookingService.DeleteBooking(bookingId);

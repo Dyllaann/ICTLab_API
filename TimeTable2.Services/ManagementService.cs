@@ -7,6 +7,7 @@ using log4net;
 using TimeTable2.Engine;
 using TimeTable2.Engine.Bookings;
 using TimeTable2.Engine.Management;
+using TimeTable2.Notifier;
 using TimeTable2.Repository.Interfaces;
 
 namespace TimeTable2.Services
@@ -28,11 +29,12 @@ namespace TimeTable2.Services
             if (existingUser == null) return true;
 
             existingUser.Role = newUser.NewRole;
+            existingUser.RoleString = newUser.NewRole.ToString();
             repository.UpdateUser(existingUser);
             return true;
         }
-        public BookingAvailability MaintenanceBooking(IClassroomRepository classroomRepository, IBookingRepository bookingRepository, IUserRepository userRepository,
-            BookingService bookingService, Booking booking, string userId)
+        public async Task<BookingAvailability> MaintenanceBooking(IClassroomRepository classroomRepository, IBookingRepository bookingRepository, IUserRepository userRepository,
+            BookingService bookingService, Booking booking, string userId, INotifier notifier)
         {   
             var logger = LogManager.GetLogger("ManagementService");
 
@@ -55,6 +57,7 @@ namespace TimeTable2.Services
 
             if (blockingBookings.Count > 0)
             {
+                var userlist = new List<string>();
                 logger.Info($"There was already a booking planned during this time for this booking. {blockingBookings.Count}");
                 foreach (var blockingBooking in blockingBookings)
                 {
@@ -63,19 +66,17 @@ namespace TimeTable2.Services
                     if (bookingUser.Role == TimeTableRole.Student)
                     {
                         bookingRepository.DeleteBooking(blockingBooking);
-                        //TODO send notification to user
+                        if (userlist.Contains(bookingOwner)) continue;
+                        await notifier.Notify(bookingOwner, "Booking cancelled", $"One or more of your bookings have been cancelled due to maintenance in room {blockingBooking.Classroom}", "API");
+                        userlist.Add(bookingOwner);
                     }
-                    var blockingBookingsAfterRemoval = bookingService.BookingAvailability(existingBookings, booking);
-                    if (blockingBookingsAfterRemoval.Count > 0)
-                    {
-                        return BookingAvailability.Booked;
-                    }
-
-                    booking.Owner = userId;
-                    booking.Type = BookingType.Maintenance;
-                    booking.Lokaal = classroomRepository.GetClassroomById(booking.Classroom);
-                    bookingRepository.CreateBooking(booking);
                 }
+            }
+
+            existingBookings = bookingRepository.GetBookingsByRoomAndWeek(booking.Classroom, booking.Week);
+            var blockingBookingsAfterRemoval = bookingService.BookingAvailability(existingBookings, booking);
+            if (blockingBookingsAfterRemoval.Count > 0)
+            {
                 return BookingAvailability.Booked;
             }
 

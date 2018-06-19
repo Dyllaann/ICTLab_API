@@ -11,7 +11,7 @@ using Google.Cloud.Firestore;
 
 namespace TimeTable2.Notifier
 {
-    public class Notifier
+    public class Notifier : INotifier
     {
         public async Task Notify(string userId, string title, string message, string from)
         {

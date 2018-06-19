@@ -14,6 +14,12 @@ namespace TimeTable2.Tests.Resources
         public List<Course> Courses { get; set; }
         public List<Classroom> Classrooms { get; set; }
 
+        public TestClassroomRepository()
+        {
+            Courses = new List<Course>();
+            Classrooms = new List<Classroom>();
+        }
+
         public ICollection<Classroom> GetAllClassrooms()
         {
             return Classrooms;
@@ -57,12 +63,14 @@ namespace TimeTable2.Tests.Resources
 
         public List<Classroom> GetAllClassroomsWithCoursesRemoveEmpty(int week)
         {
-            return Classrooms;
+            var classrooms = GetAllClassrooms();
+            return classrooms.Where(classroom => classroom.Courses.Count != 0).ToList();
         }
 
         public List<Classroom> GetAllClassroomsWithBookingsRemoveEmpty(int week)
         {
-            return Classrooms;
+            var classrooms = GetAllClassrooms();
+            return classrooms.Where(classroom => classroom.Bookings.Count != 0).ToList();
         }
 
         public List<Classroom> GetAllClassroomsWithCoursesAndBookings(int week)

@@ -68,7 +68,7 @@ namespace TimeTable2.Controllers
         [HttpGet]
         [SwaggerOperation("Filter")]
         [Route("Bookings/{roomCode}/{week}")]
-        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<FilterClassroom>))]
+        [SwaggerResponse(HttpStatusCode.OK, Type = typeof(List<Booking>))]
         public HttpResponseMessage GetBookingsPerRoomPerWeek(string roomCode, int week)
         {
             var context = new TimeTableContext(WebConfigurationManager.AppSettings["DbConnectionString"]);

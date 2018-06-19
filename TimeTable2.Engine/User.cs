@@ -19,7 +19,7 @@ namespace TimeTable2.Engine
         public string RoleString    
         {
             get => Role.ToString();
-            private set => value.ParseEnum<TimeTableRole>();
+            set => value.ParseEnum<TimeTableRole>();
         }
 
         public DateTime LastLogin { get; set; }
@@ -31,7 +31,8 @@ namespace TimeTable2.Engine
         Student = 0,
         Teacher = 1,
         Fit = 2,
-        Management = 3
+        Management = 3,
+        Admin = 4
 
     }
 }

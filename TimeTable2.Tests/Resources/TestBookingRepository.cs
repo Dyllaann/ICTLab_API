@@ -11,10 +11,15 @@ namespace TimeTable2.Tests.Resources
 {
     public class TestBookingRepository : IBookingRepository
     {
-        private List<Booking> Bookings { get; set; }
+        public List<Booking> Bookings { get; set; }
         public TestBookingRepository(List<Booking> bookings)
         {
             Bookings = bookings;
+        }
+
+        public TestBookingRepository()
+        {
+            Bookings = new List<Booking>();
         }
 
 

@@ -14,10 +14,6 @@ namespace TimeTable2.Tests
         [TestMethod]
         public void TestAvailability()
         {
-            var c = new Classroom()
-            {
-                RoomId = "H.1.110"
-            };
             var classroomRepository = new TestClassroomRepository
             {
                 //Given

@@ -39,7 +39,7 @@ namespace TimeTable2.Controllers
                 {
                     if (header.Scheme == "tt2")
                     {
-                        UserId = "DEBUG";
+                        UserId = "Kaj";
                         UserProfile = new GoogleUserProfile
                         {
                             UserId = UserId,
@@ -92,6 +92,7 @@ namespace TimeTable2.Controllers
             {
                 var dashboardToken = WebConfigurationManager.AppSettings["BasicAuth.Dashboard.Token"];
                 if (dashboardRegex.Groups[1].Value != dashboardToken) return false;
+                if(!dashboardRegex.Groups[3].Value.EndsWith("@hr.nl")) return false;
 
                 UserId = dashboardRegex.Groups[2].Value;
                 UserProfile = new GoogleUserProfile
