@@ -31,7 +31,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -48,13 +48,38 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BookingServiceTests.cs" />
+    <Compile Include="ManagementServiceTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Resources\TestBookingRepository.cs" />
+    <Compile Include="Resources\TestClassroomRepository.cs" />
+    <Compile Include="Resources\TestNotifier.cs" />
+    <Compile Include="Resources\TestUserRepository.cs" />
+    <Compile Include="StatisticsServiceTests.cs" />
+    <Compile Include="UserServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
-    <Folder Include="Resources\" />
+    <ProjectReference Include="..\TimeTable2.Engine\TimeTable2.Engine.csproj">
+      <Project>{C65E7157-D103-4BFF-AD71-B7F54563AE0E}</Project>
+      <Name>TimeTable2.Engine</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TimeTable2.Notifier\TimeTable2.Notifier.csproj">
+      <Project>{4AF0266A-BD67-4D85-9215-6B5A4CFA8326}</Project>
+      <Name>TimeTable2.Notifier</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TimeTable2.Repository\TimeTable2.Repository.csproj">
+      <Project>{C1C742FC-FFA5-402A-AB00-D3EAF2A69542}</Project>
+      <Name>TimeTable2.Repository</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TimeTable2.Services\TimeTable2.Services.csproj">
+      <Project>{B1580F58-D3CF-42C2-BA46-60684417037E}</Project>
+      <Name>TimeTable2.Services</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
