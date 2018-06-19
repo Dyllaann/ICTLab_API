@@ -10,20 +10,29 @@ namespace TimeTable2.Engine
     public class User
     {
         public string UserId { get; set; }
-
-        [JsonProperty("email")]
         public string Email { get; set; }
-
-        [JsonProperty("email_verified")]
-        public bool EmailVerified { get; set; }
-
-        [JsonProperty("name")]
         public string Name { get; set; }
-
-        [JsonProperty("given_name")]
         public string GivenName { get; set; }
-
-        [JsonProperty("family_name")]
         public string FamilyName { get; set; }
+
+        public TimeTableRole Role { get; set; }
+        public string RoleString    
+        {
+            get => Role.ToString();
+            set => value.ParseEnum<TimeTableRole>();
+        }
+
+        public DateTime LastLogin { get; set; }
+        public DateTime CreatedAt { get; set; }
+    }
+
+    public enum TimeTableRole
+    {
+        Student = 0,
+        Teacher = 1,
+        Fit = 2,
+        Management = 3,
+        Admin = 4
+
     }
 }
