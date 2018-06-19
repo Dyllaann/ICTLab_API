@@ -38,26 +38,25 @@ To make use of the API, the following Repository can be used:
 ### Installing
 
 A step by step guide to get you started with setting up the API for debugging purposes
-
+```
 Clone the repository
 Configure your DBConnectionString in the Web.config file
 Apply the database scheme using the Package Manager Console with 'Update-Database' command.
-```
-Set the TimeTable2 project as default startup project
-Set the TimeTable2.Data project as default project in the package manager console
+- Set the TimeTable2 project as default startup project
+- Set the TimeTable2.Data project as default project in the package manager console
 ```
 Try the /api/timetable/health endpoint to retrieve a [200 OK] response code.
 
 ## Deployment
 A step by step guide to get you started with setting up the API for live purposes
 
+```
 Clone the repository
 Publish the TimeTable2 project to an app service.
 Configure the app service application settings according to the web.config file.
 Apply the database scheme using the Package Manager Console with 'Update-Database' command (within Visual Studio).
-```
-Set the TimeTable2 project as default startup project
-Set the TimeTable2.Data project as default project in the package manager console
+- Set the TimeTable2 project as default startup project
+- Set the TimeTable2.Data project as default project in the package manager console
 ```
 Try the /api/timetable/health endpoint to retrieve a [200 OK] response code.
 
