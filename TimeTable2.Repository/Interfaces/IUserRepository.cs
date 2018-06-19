@@ -10,5 +10,8 @@ namespace TimeTable2.Repository.Interfaces
     public interface IUserRepository
     {
         void CreateUser(User user);
+        void UpdateUser(User user);
+        User GetUserById(string userUserId);
+        List<User> GetAllUsers();
     }
 }

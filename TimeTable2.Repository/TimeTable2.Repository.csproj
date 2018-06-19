@@ -23,7 +23,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
+    <Optimize>false</Optimize>
     <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
@@ -47,10 +47,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BookingRepository.cs" />
+    <Compile Include="ClassRepository.cs" />
+    <Compile Include="DbRepository.cs" />
+    <Compile Include="ClassroomRepository.cs" />
+    <Compile Include="Interfaces\IBookingRepository.cs" />
+    <Compile Include="Interfaces\IClassRepository.cs" />
+    <Compile Include="Interfaces\IClassroomRepository.cs" />
+    <Compile Include="Interfaces\IScraperRepository.cs" />
     <Compile Include="Interfaces\IUserRepository.cs" />
-    <Compile Include="IRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="TimeTableContext.cs" />
+    <Compile Include="ScraperRepository.cs" />
     <Compile Include="UserRepository.cs" />
   </ItemGroup>
   <ItemGroup>
