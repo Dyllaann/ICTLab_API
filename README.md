@@ -25,7 +25,11 @@ These instructions will get you a copy of the project up and running on your loc
 
 The following prerequisites are needed for the API
 ```
+* Correct installation of Microsoft Visual Studio including the Azure SDK
 * Valid Azure Subscription
+* SQL Database
+* Firebase project & Firestore project
+* HINT API secret. Obtainable by webmaster @ hr.nl
 ```
 
 To make use of the API, the following Repository can be used:
@@ -33,31 +37,36 @@ To make use of the API, the following Repository can be used:
 
 ### Installing
 
-A step by step series of examples that tell you have to get a development env running
-
+A step by step guide to get you started with setting up the API for debugging purposes
+```
 Clone the repository
-
+Configure your DBConnectionString in the Web.config file
+Apply the database scheme using the Package Manager Console with 'Update-Database' command.
+- Set the TimeTable2 project as default startup project
+- Set the TimeTable2.Data project as default project in the package manager console
 ```
-Give the example
-```
-
-And repeat
-
-```
-until finished
-```
-
-End with an example of getting some data out of the system or using it for a little demo
+Try the /api/timetable/health endpoint to retrieve a [200 OK] response code.
 
 ## Deployment
+A step by step guide to get you started with setting up the API for live purposes
 
-Deployments are done to an Azure App Service.
+```
+Clone the repository
+Publish the TimeTable2 project to an app service.
+Configure the app service application settings according to the web.config file.
+Apply the database scheme using the Package Manager Console with 'Update-Database' command (within Visual Studio).
+- Set the TimeTable2 project as default startup project
+- Set the TimeTable2.Data project as default project in the package manager console
+```
+Try the /api/timetable/health endpoint to retrieve a [200 OK] response code.
+
 
 ## Built With
 
 * [Azure](https://azure.microsoft.com/nl-nl/) - Cloud platform for hosting the API
 * [Nuget](https://www.nuget.org/) - Package Management
 * [Entity Framework](https://msdn.microsoft.com/en-us/library/aa937723(v=vs.113).aspx) - Code First Approach
+* [Firebase](https://firebase.google.com/) - Notifications to mobile devices
 
 ## Contributing
 
