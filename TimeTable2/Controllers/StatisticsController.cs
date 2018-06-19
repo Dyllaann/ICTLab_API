@@ -66,8 +66,8 @@ namespace TimeTable2.Controllers
 
         #region AmountOfBookings
         [HttpGet]
-        [SwaggerOperation("AmountOfMaintenanceBookings/{week}/{top}")]
-        [Route("AmountOfMaintenanceBookings/{week}/{top}")]
+        [SwaggerOperation("AmountOfMaintenanceBookings/{week}")]
+        [Route("AmountOfMaintenanceBookings/{week}")]
         [SwaggerResponse(HttpStatusCode.OK, Type = typeof(int))]
         public HttpResponseMessage AmountOfMaintenanceBookings(int week)
         {
